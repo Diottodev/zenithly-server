@@ -1,0 +1,24 @@
+import * as v from 'valibot';
+
+export const envSchema = v.object({
+  PORT: v.pipe(v.string(), v.transform(Number)),
+  DATABASE_URL: v.string(),
+  JWT_SECRET: v.string(),
+  JWT_EXPIRES_IN: v.optional(v.string()),
+  JWT_REFRESH_SECRET: v.optional(v.string()),
+  JWT_REFRESH_EXPIRES_IN: v.optional(v.string()),
+  GITHUB_CLIENT_ID: v.optional(v.string()),
+  GITHUB_CLIENT_SECRET: v.optional(v.string()),
+  GOOGLE_CLIENT_ID: v.optional(v.string()),
+  GOOGLE_CLIENT_SECRET: v.optional(v.string()),
+  NODE_ENV: v.optional(
+    v.union([
+      v.literal('development'),
+      v.literal('production'),
+      v.literal('test'),
+    ])
+  ),
+});
+
+export const env = v.parse(envSchema, process.env);
+export type Env = typeof env;
