@@ -1,5 +1,11 @@
 import type { FastifyInstance } from 'fastify';
-import { type Login, loginSchema } from './schemas/user-routes.schema.ts';
+import { handleAuthError } from '../handlers/handle-error-auth.ts';
+import {
+  createUserSchema,
+  type Login,
+  loginSchema,
+} from '../schemas/user-routes.schema.ts';
+import type { THandleError } from '../types/handle-error-login.ts';
 
 export function authRoutes(app: FastifyInstance) {
   // POST /auth/login - Login with email and password using better-auth
@@ -14,6 +20,13 @@ export function authRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { email, password } = request.body;
+      // Validate email and password
+      if (!(email && password)) {
+        return reply.code(400).send({
+          error: 'Dados inválidos',
+          message: 'Email e senha são obrigatórios',
+        });
+      }
       try {
         // Usar better-auth para fazer sign-in
         const signInResult = await app.betterAuth.api.signInEmail({
@@ -42,10 +55,7 @@ export function authRoutes(app: FastifyInstance) {
         });
       } catch (error) {
         app.log.error(error, 'Erro no login');
-        return reply.code(500).send({
-          error: 'Erro interno do servidor',
-          message: 'Não foi possível realizar o login',
-        });
+        return handleAuthError(error as THandleError, reply);
       }
     }
   );
@@ -120,15 +130,7 @@ export function authRoutes(app: FastifyInstance) {
     '/auth/register',
     {
       schema: {
-        body: {
-          type: 'object',
-          properties: {
-            name: { type: 'string', minLength: 2 },
-            email: { type: 'string', format: 'email' },
-            password: { type: 'string', minLength: 8 },
-          },
-          required: ['name', 'email', 'password'],
-        },
+        body: createUserSchema,
       },
     },
     async (request, reply) => {
@@ -153,10 +155,7 @@ export function authRoutes(app: FastifyInstance) {
         });
       } catch (error) {
         app.log.error(error, 'Erro no registro');
-        return reply.code(500).send({
-          error: 'Erro interno do servidor',
-          message: 'Não foi possível criar a conta',
-        });
+        return handleAuthError(error as THandleError, reply);
       }
     }
   );

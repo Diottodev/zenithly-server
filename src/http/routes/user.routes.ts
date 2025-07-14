@@ -1,19 +1,15 @@
-import bcrypt from 'bcryptjs';
 import { and, count, eq, like, or, type SQL } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
-import { nanoid } from 'nanoid';
-import { db } from '../db/connection.ts';
-import { schema } from '../db/drizzle/index.ts';
+import { db } from '../../db/connection.ts';
+import { schema } from '../../db/drizzle/index.ts';
 import {
-  type CreateUser,
-  createUserSchema,
   type UpdateUser,
   type UserParams,
   type UserQuery,
   updateUserSchema,
   userParamsSchema,
   userQuerySchema,
-} from './schemas/user-routes.schema.ts';
+} from '../schemas/user-routes.schema.ts';
 
 export function userRoutes(app: FastifyInstance) {
   // GET /users - List users with pagination and filtering
@@ -130,74 +126,6 @@ export function userRoutes(app: FastifyInstance) {
         return reply.code(500).send({
           error: 'Erro interno do servidor',
           message: 'Não foi possível buscar o usuário',
-        });
-      }
-    }
-  );
-
-  // POST /users - Create user
-  app.post<{
-    Body: CreateUser;
-  }>(
-    '/users',
-    {
-      schema: {
-        body: createUserSchema,
-      },
-    },
-    async (request, reply) => {
-      const { name, email, password, image, role } = request.body;
-      try {
-        const existingUser = await db
-          .select({ id: schema.user.id })
-          .from(schema.user)
-          .where(eq(schema.user.email, email))
-          .limit(1);
-        if (existingUser.length > 0) {
-          return reply.code(409).send({
-            error: 'Email já cadastrado',
-            message: 'Este email já está sendo usado por outro usuário',
-          });
-        }
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const userId = nanoid();
-        const [user] = await db
-          .insert(schema.user)
-          .values({
-            id: userId,
-            name,
-            email,
-            image,
-            role: role || 'user',
-          })
-          .returning({
-            id: schema.user.id,
-            name: schema.user.name,
-            email: schema.user.email,
-            emailVerified: schema.user.emailVerified,
-            image: schema.user.image,
-            role: schema.user.role,
-            createdAt: schema.user.createdAt,
-            updatedAt: schema.user.updatedAt,
-            hasCompletedOnboarding: schema.user.hasCompletedOnboarding,
-            onboardingStep: schema.user.onboardingStep,
-          });
-        await db.insert(schema.account).values({
-          id: nanoid(),
-          accountId: email,
-          providerId: 'credential',
-          userId,
-          password: hashedPassword,
-        });
-        return reply.code(201).send({
-          message: 'Usuário criado com sucesso',
-          user,
-        });
-      } catch (error) {
-        app.log.error(error, 'Erro ao criar usuário');
-        return reply.code(500).send({
-          error: 'Erro interno do servidor',
-          message: 'Não foi possível criar o usuário',
         });
       }
     }

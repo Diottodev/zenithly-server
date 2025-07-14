@@ -1,0 +1,201 @@
+### Zenithly Server API Tests
+### Base URL
+@baseUrl = http://localhost:3333
+@authToken = {{authLogin.response.body.$.token}}
+
+### Health Check
+GET {{baseUrl}}/health
+
+### === AUTH ROUTES ===
+
+### Register a new user
+# @name authRegister
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Nicolas",
+  "email": "nicolas@example.com",
+  "password": "password123"
+}
+
+### Login with email and password
+# @name authLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "nicolas@example.com",
+  "password": "password123"
+}
+
+### Get current session (requires authentication)
+# @name authSession
+GET {{baseUrl}}/auth/session
+Authorization: Bearer {{authToken}}
+
+### Logout (requires authentication)
+# @name authLogout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{authToken}}
+
+### Get OAuth providers
+# @name authProviders
+GET {{baseUrl}}/auth/providers
+
+### GitHub OAuth Login (redirects to GitHub)
+# @name authGithub
+GET {{baseUrl}}/auth/github
+
+### Google OAuth Login (redirects to Google)
+# @name authGoogle
+GET {{baseUrl}}/auth/google
+
+### === USER ROUTES ===
+
+### Get all users with pagination
+# @name getAllUsers
+GET {{baseUrl}}/users?page=1&limit=10
+
+### Get all users with search
+# @name getUsersWithSearch
+GET {{baseUrl}}/users?search=john&page=1&limit=10
+
+### Get all users filtered by role
+# @name getUsersByRole
+GET {{baseUrl}}/users?role=admin&page=1&limit=10
+
+### Get user by ID
+# @name getUserById
+GET {{baseUrl}}/users/1
+
+### Create a new user
+# @name createUser
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "password123",
+  "role": "user",
+  "image": "https://example.com/avatar.jpg"
+}
+
+### Update user by ID
+# @name updateUser
+PUT {{baseUrl}}/users/1
+Content-Type: application/json
+
+{
+  "name": "John Updated",
+  "email": "john.updated@example.com",
+  "image": "https://example.com/new-avatar.jpg"
+}
+
+### Delete user by ID
+# @name deleteUser
+DELETE {{baseUrl}}/users/1
+
+### === EXAMPLES WITH DIFFERENT SCENARIOS ===
+
+### Test invalid email format (should return 400)
+# @name authRegisterInvalidEmail
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "invalid-email",
+  "password": "password123"
+}
+
+### Test short password (should return 400)
+# @name authRegisterShortPassword
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "123"
+}
+
+### Test login with wrong credentials (should return 401)
+# @name authLoginWrongCredentials
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "nonexistent@example.com",
+  "password": "wrongpassword"
+}
+
+### Test get session without token (should return 401)
+# @name authSessionWithoutToken
+GET {{baseUrl}}/auth/session
+
+### Test get non-existent user (should return 404)
+# @name getNonExistentUser
+GET {{baseUrl}}/users/999
+
+### Test create user with duplicate email (should return 409)
+# @name createDuplicateUser
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Duplicate User",
+  "email": "john@example.com",
+  "password": "password123",
+  "role": "user"
+}
+
+### Test update non-existent user (should return 404)
+# @name updateNonExistentUser
+PUT {{baseUrl}}/users/999
+Content-Type: application/json
+
+{
+  "name": "Updated Name"
+}
+
+### Test delete non-existent user (should return 404)
+# @name deleteNonExistentUser
+DELETE {{baseUrl}}/users/999
+
+### === BULK OPERATIONS ===
+
+### Create multiple users for testing
+# @name createMultipleUsers
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "admin"
+}
+
+###
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Regular User",
+  "email": "user@example.com", 
+  "password": "user123",
+  "role": "user"
+}
+
+###
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Moderator User",
+  "email": "mod@example.com",
+  "password": "mod123",
+  "role": "moderator"
+}
