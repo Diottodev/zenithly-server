@@ -2,6 +2,8 @@ import type { FastifyReply } from 'fastify';
 import type { THandleError } from '../types/handle-error-login.ts';
 
 export function handleAuthError(error: THandleError, reply: FastifyReply) {
+  console.log('Handling auth error:', error);
+  
   if (error && typeof error === 'object' && 'body' in error) {
     if (error.body.code === 'INVALID_EMAIL_OR_PASSWORD') {
       return reply.code(error.statusCode).send({
