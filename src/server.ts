@@ -7,11 +7,12 @@ import { env } from './env.ts';
 import { authRoutes } from './http/routes/auth.routes.ts';
 import { userRoutes } from './http/routes/user.routes.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
+import { auth } from './auth.ts';
 
 export function createApp() {
   const app = fastify();
   app.register(fastifyCors, {
-    origin: '*',
+    origin: ['localhost:3000'],
   });
   app.register(fastifyJwt, {
     secret: env.JWT_SECRET,
