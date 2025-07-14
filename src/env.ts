@@ -2,6 +2,7 @@ import * as v from 'valibot';
 
 export const envSchema = v.object({
   PORT: v.pipe(v.string(), v.transform(Number)),
+  CORS_ORIGIN: v.optional(v.string()),
   DATABASE_URL: v.string(),
   JWT_SECRET: v.string(),
   JWT_EXPIRES_IN: v.optional(v.string()),
