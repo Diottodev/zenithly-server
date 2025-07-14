@@ -1,7 +1,11 @@
 ### Zenithly Server API Tests
 ### Base URL
-@baseUrl = http://localhost:3333
+@baseUrl = http://localhost:8080
 @authToken = {{authLogin.response.body.$.token}}
+
+@userId = {{authLogin.response.body.$.user.id}}
+
+### === HEALTH CHECK ROUTES ===
 
 ### Health Check
 GET {{baseUrl}}/health
@@ -67,7 +71,7 @@ GET {{baseUrl}}/users?role=admin&page=1&limit=10
 
 ### Get user by ID
 # @name getUserById
-GET {{baseUrl}}/users/1
+GET {{baseUrl}}/users/{{userId}}
 
 ### Create a new user
 # @name createUser
