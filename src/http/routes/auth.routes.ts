@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { env } from '../../env.ts';
 import { handleAuthError } from '../handlers/handle-error-auth.ts';
 import {
   createUserSchema,
@@ -6,8 +7,8 @@ import {
   loginSchema,
 } from '../schemas/user-routes.schema.ts';
 import type { THandleError } from '../types/handle-error-login.ts';
-import { env } from '../../env.ts';
-import { log } from 'node:console';
+
+const SESSION_TOKEN_REGEX = /better-auth\.session_token=([^;]+)/;
 
 export function authRoutes(app: FastifyInstance) {
   // POST /auth/login - Login with email and password using better-auth
@@ -22,7 +23,6 @@ export function authRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { email, password } = request.body;
-      // Validate email and password
       if (!(email && password)) {
         return reply.code(400).send({
           error: 'Dados inválidos',
@@ -30,7 +30,6 @@ export function authRoutes(app: FastifyInstance) {
         });
       }
       try {
-        // Usar better-auth para fazer sign-in
         const signInResult = await app.betterAuth.api.signInEmail({
           body: {
             email,
@@ -43,7 +42,6 @@ export function authRoutes(app: FastifyInstance) {
             message: 'Email ou senha incorretos',
           });
         }
-        // Definir cookies de sessão se houver
         if (signInResult.token) {
           reply.header(
             'set-cookie',
@@ -163,23 +161,20 @@ export function authRoutes(app: FastifyInstance) {
   );
 
   // GET /auth/github - GitHub OAuth login
-  app.get('/auth/github', async (request, reply) => {
+  app.get('/auth/github', async (_request, reply) => {
     try {
-      // Usar o better-auth diretamente para gerar a URL de autorização
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
           callbackURL: `${env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback/success`,
         },
       });
-      
       if (!githubResult?.url) {
         return reply.code(500).send({
           error: 'Erro na autenticação',
           message: 'Não foi possível iniciar login com GitHub',
         });
       }
-      
       return reply.redirect(githubResult.url);
     } catch (error) {
       app.log.error(error, 'Erro no login GitHub');
@@ -191,23 +186,20 @@ export function authRoutes(app: FastifyInstance) {
   });
 
   // GET /auth/google - Google OAuth login
-  app.get('/auth/google', async (request, reply) => {
+  app.get('/auth/google', async (_request, reply) => {
     try {
-      // Usar o better-auth diretamente para gerar a URL de autorização
       const googleResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'google',
           callbackURL: `${env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback/success`,
         },
       });
-      
       if (!googleResult?.url) {
         return reply.code(500).send({
           error: 'Erro na autenticação',
           message: 'Não foi possível iniciar login com Google',
         });
       }
-      
       return reply.redirect(googleResult.url);
     } catch (error) {
       app.log.error(error, 'Erro no login Google');
@@ -223,24 +215,26 @@ export function authRoutes(app: FastifyInstance) {
     Querystring: { token?: string };
   }>('/auth/callback', async (request, reply) => {
     try {
-      // Extrair token da query string ou cookies
-      const token = request.query.token || request.headers.cookie?.match(/better-auth\.session_token=([^;]+)/)?.[1];
+      const token =
+        request.query.token ||
+        request.headers.cookie?.match(SESSION_TOKEN_REGEX);
       if (token) {
-        // Verificar se a sessão é válida
         const sessionData = await app.betterAuth.api.getSession({
           headers: new Headers({
             cookie: `better-auth.session_token=${token}`,
           }),
         });
         if (sessionData?.user) {
-          // Redirecionar para o frontend com sucesso
           const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
-          return reply.redirect(`${frontendURL}/auth/callback?success=true&token=${token}`);
+          return reply.redirect(
+            `${frontendURL}/auth/callback?success=true&token=${token}`
+          );
         }
       }
-      // Se não há token válido, redirecionar com erro
       const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
-      return reply.redirect(`${frontendURL}/auth/callback?error=invalid_session`);
+      return reply.redirect(
+        `${frontendURL}/auth/callback?error=invalid_session`
+      );
     } catch (error) {
       app.log.error(error, 'Erro no callback de sucesso');
       const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
@@ -251,12 +245,11 @@ export function authRoutes(app: FastifyInstance) {
   // GET /auth/callback/error - Callback de erro do OAuth
   app.get<{
     Querystring: { error?: string };
-  }>('/auth/callback/error', async (request, reply) => {
+  }>('/auth/callback/error', (request, reply) => {
     const error = request.query.error || 'unknown_error';
     const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
     return reply.redirect(`${frontendURL}/auth/callback?error=${error}`);
   });
-
 
   // GET /auth/providers - List OAuth providers
   app.get('/auth/providers', (_, reply) => {
