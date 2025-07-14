@@ -3,7 +3,7 @@
 @baseUrl = http://localhost:8080
 @authToken = {{authLogin.response.body.$.token}}
 
-@userId = {{authLogin.response.body.$.user.id}}
+@userId = {{getAllUsers.response.body.$.users[0].id}}
 
 ### === HEALTH CHECK ROUTES ===
 
@@ -63,32 +63,19 @@ GET {{baseUrl}}/users?page=1&limit=10
 
 ### Get all users with search
 # @name getUsersWithSearch
-GET {{baseUrl}}/users?search=john&page=1&limit=10
+GET {{baseUrl}}/users?search=john&page=1&limit=4
 
 ### Get all users filtered by role
 # @name getUsersByRole
-GET {{baseUrl}}/users?role=admin&page=1&limit=10
+GET {{baseUrl}}/users?role=user&page=1&limit=10
 
 ### Get user by ID
 # @name getUserById
 GET {{baseUrl}}/users/{{userId}}
 
-### Create a new user
-# @name createUser
-POST {{baseUrl}}/users
-Content-Type: application/json
-
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "password": "password123",
-  "role": "user",
-  "image": "https://example.com/avatar.jpg"
-}
-
 ### Update user by ID
 # @name updateUser
-PUT {{baseUrl}}/users/1
+PUT {{baseUrl}}/users/{{userId}}
 Content-Type: application/json
 
 {
@@ -99,7 +86,7 @@ Content-Type: application/json
 
 ### Delete user by ID
 # @name deleteUser
-DELETE {{baseUrl}}/users/1
+DELETE {{baseUrl}}/users/{{userId}}
 
 ### === EXAMPLES WITH DIFFERENT SCENARIOS ===
 
@@ -145,7 +132,7 @@ GET {{baseUrl}}/users/999
 
 ### Test create user with duplicate email (should return 409)
 # @name createDuplicateUser
-POST {{baseUrl}}/users
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -172,7 +159,7 @@ DELETE {{baseUrl}}/users/999
 
 ### Create multiple users for testing
 # @name createMultipleUsers
-POST {{baseUrl}}/users
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -183,23 +170,23 @@ Content-Type: application/json
 }
 
 ###
-POST {{baseUrl}}/users
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
   "name": "Regular User",
   "email": "user@example.com", 
-  "password": "user123",
+  "password": "user122223",
   "role": "user"
 }
 
 ###
-POST {{baseUrl}}/users
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
   "name": "Moderator User",
   "email": "mod@example.com",
-  "password": "mod123",
+  "password": "mod123222",
   "role": "moderator"
 }
