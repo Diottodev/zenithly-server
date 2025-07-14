@@ -24,12 +24,12 @@ export const auth = betterAuth({
     github: {
       clientId: env.GITHUB_CLIENT_ID || '',
       clientSecret: env.GITHUB_CLIENT_SECRET || '',
-      enabled: !!(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET),
+      redirectURI: `${env.BETTER_AUTH_URL || 'http://localhost:8080'}/api/auth/callback/github`,
     },
     google: {
       clientId: env.GOOGLE_CLIENT_ID || '',
       clientSecret: env.GOOGLE_CLIENT_SECRET || '',
-      enabled: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
+      redirectURI: `${env.BETTER_AUTH_URL || 'http://localhost:8080'}/api/auth/callback/google`,
     },
   },
   session: {
@@ -37,8 +37,13 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24, // 1 day
   },
   secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL || 'http://localhost:3333',
-  trustedOrigins: ['http://localhost:3000', 'http://localhost:3001'],
+  baseURL: env.BETTER_AUTH_URL || 'http://localhost:8080',
+  trustedOrigins: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:8080',
+    env.FRONTEND_URL || 'http://localhost:3000'
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;
