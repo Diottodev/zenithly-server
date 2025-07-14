@@ -117,7 +117,7 @@ export function userRoutes(app: FastifyInstance) {
         if (user.length === 0) {
           return reply.code(404).send({
             error: 'Usuário não encontrado',
-            message: `Usuário com ID ${id} não foi encontrado`,
+            message: 'Usuário não foi encontrado',
           });
         }
         return reply.code(200).send({ user: user[0] });
@@ -155,7 +155,7 @@ export function userRoutes(app: FastifyInstance) {
         if (existingUser.length === 0) {
           return reply.code(404).send({
             error: 'Usuário não encontrado',
-            message: `Usuário com ID ${id} não foi encontrado`,
+            message: 'Usuário não foi encontrado',
           });
         }
         if (updateData.email) {
@@ -231,7 +231,7 @@ export function userRoutes(app: FastifyInstance) {
         if (existingUser.length === 0) {
           return reply.code(404).send({
             error: 'Usuário não encontrado',
-            message: `Usuário com ID ${id} não foi encontrado`,
+            message: 'Usuário não foi encontrado',
           });
         }
         await db.delete(schema.account).where(eq(schema.account.userId, id));
