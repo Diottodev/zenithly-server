@@ -13,6 +13,7 @@ export const envSchema = v.object({
   GOOGLE_CLIENT_SECRET: v.optional(v.string()),
   BETTER_AUTH_SECRET: v.string(),
   BETTER_AUTH_URL: v.optional(v.string()),
+  FRONTEND_URL: v.optional(v.string()),
   NODE_ENV: v.optional(
     v.union([
       v.literal('development'),
