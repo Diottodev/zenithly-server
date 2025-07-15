@@ -277,12 +277,6 @@ tail -f /var/log/nginx/error.log
 
 Este projeto está sob a licença ISC.
 
-## 📞 Suporte
-
-Para suporte, entre em contato:
-
-- **GitHub**: [Diottodev](https://github.com/Diottodev)
-- **Email**: seu-email@exemplo.com
 
 ## 📚 Documentação Adicional
 
