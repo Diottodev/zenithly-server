@@ -6,7 +6,7 @@ module.exports = {
       script: 'src/server.ts',
       interpreter: 'tsx',
       instances: 1,
-      exec_mode: 'cluster',
+      exec_mode: 'fork',
       watch: false,
       max_memory_restart: '1G',
       env: {
