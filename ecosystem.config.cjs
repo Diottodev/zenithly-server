@@ -27,6 +27,7 @@ module.exports = {
         BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
         FRONTEND_URL: process.env.FRONTEND_URL,
         CORS_ORIGIN: process.env.CORS_ORIGIN,
+        API_URL: process.env.API_URL || 'http://localhost:8080',
       },
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       error_file: './logs/pm2-error.log',

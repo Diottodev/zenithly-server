@@ -150,5 +150,5 @@ app.listen({ port: env.PORT, host: '0.0.0.0' }, (err) => {
     log(err, 'Server failed to start');
     process.exit(1);
   }
-  log(`Server is running at http://localhost:${env.PORT}`);
+  log(`Server is running at http://0.0.0.0:${env.PORT}`);
 });
