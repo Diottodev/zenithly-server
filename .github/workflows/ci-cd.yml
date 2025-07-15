@@ -89,24 +89,25 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.EC2_PORT || 22 }}
           script: |
-            # Navigate to application directory
-            cd zenithly-server || cd /var/www/zenithly-server
+            export PATH="$HOME/.local/share/pnpm:$PATH"
 
-            # Pull latest changes
+            # Ir para diretório da aplicação (ajuste o caminho correto)
+            cd /home/ubuntu/zenithly-server || cd /var/www/zenithly-server || exit 1
+
+            # Atualizar código
             git pull origin master
 
-            # Install/update dependencies
+            # Instalar dependências
             pnpm install --frozen-lockfile
 
-            # Run database migrations
+            # Rodar migrações
             pnpm db:migrate
 
-            # Restart PM2 application
-            pm2 restart zenithly-server || pm2 start ecosystem.config.js
+            # Reiniciar app no PM2
+            pm2 restart zenithly-server || pm2 start ecosystem.config.cjs
 
-            # Show PM2 status
+            # Mostrar status PM2
             pm2 status
