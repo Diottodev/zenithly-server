@@ -18,7 +18,7 @@ describe('Integration Tests', () => {
     it('should return OK status', async () => {
       // Mockar a conexão do banco para garantir status OK
       vi.doMock('../../src/db/connection.ts', () => ({
-        db: { execute: vi.fn().mockResolvedValueOnce(undefined) }
+        db: { execute: vi.fn().mockResolvedValueOnce(undefined) },
       }));
       const response = await app.inject({
         method: 'GET',
@@ -41,7 +41,9 @@ describe('Integration Tests', () => {
         },
       });
       // Espera o valor configurado no CORS
-      expect(response.headers['access-control-allow-origin']).toBe('http://localhost:3000');
+      expect(response.headers['access-control-allow-origin']).toBe(
+        'http://localhost:3000'
+      );
     });
   });
 
