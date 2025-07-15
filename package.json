@@ -15,7 +15,10 @@
     "test:coverage": "vitest run --coverage",
     "lint": "biome check",
     "format": "biome format",
-    "precommit": "lefthook run precommit"
+    "precommit": "lefthook run precommit",
+    "deploy": "bash scripts/deploy.sh",
+    "monitor": "bash scripts/monitor.sh",
+    "setup-server": "bash scripts/setup-server.sh"
   },
   "keywords": [],
   "author": "DiottoDev",
