@@ -103,8 +103,39 @@ export function createApp() {
   app.register(userRoutes);
   app.register(authRoutes);
   app.register(integrationsRoutes);
-  app.get('/health', () => {
-    return { status: 'OK' };
+  
+  // Health check endpoint
+  app.get('/health', async () => {
+    const healthCheck: {
+      status: string;
+      timestamp: string;
+      uptime: number;
+      memory: NodeJS.MemoryUsage;
+      pid: number;
+      environment: string | undefined;
+      version: string;
+      database?: string;
+    } = {
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      pid: process.pid,
+      environment: env.NODE_ENV,
+      version: process.version,
+    };
+    
+    try {
+      // Test database connection
+      const { db } = await import('./db/connection.ts');
+      await db.execute('SELECT 1');
+      healthCheck.database = 'connected';
+    } catch (error) {
+      healthCheck.database = 'disconnected';
+      healthCheck.status = 'ERROR';
+    }
+    
+    return healthCheck;
   });
   return app;
 }
