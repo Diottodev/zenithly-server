@@ -3,7 +3,7 @@
 @baseUrl = http://localhost:8080
 @authToken = {{authLogin.response.body.$.token}}
 
-@userId = {{getAllUsers.response.body.$.users[0].id}}
+@userId = {{authLogin.response.body.$.user.id}}
 
 ### === HEALTH CHECK ROUTES ===
 
@@ -190,3 +190,135 @@ Content-Type: application/json
   "password": "mod123222",
   "role": "moderator"
 }
+
+
+
+### === INTEGRATIONS ROUTES - COMPREHENSIVE TESTS ===
+
+### Get integrations status for user
+# @name getIntegrationsStatus
+GET {{baseUrl}}/integrations/status/{{userId}}
+
+### Get Google OAuth authorization URL
+# @name getGoogleAuthUrl
+GET {{baseUrl}}/integrations/google/auth-url/{{userId}}
+
+### Google OAuth callback (example with dummy code)
+# @name googleOAuthCallback
+POST {{baseUrl}}/integrations/google/callback/{{userId}}
+Content-Type: application/json
+
+{
+  "code": "4/0AX4XfWh-dummy-authorization-code-example",
+  "state": "user_{{userId}}"
+}
+
+### Outlook OAuth callback (example with dummy code)
+# @name outlookOAuthCallback
+POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
+Content-Type: application/json
+
+{
+  "code": "M.R3_BAY.dummy-authorization-code-example",
+  "state": "user_{{userId}}"
+}
+
+### Get Google Calendar events
+# @name getGoogleCalendarEvents
+GET {{baseUrl}}/integrations/google/calendar/events/{{userId}}
+
+### Get Gmail messages
+# @name getGmailMessages
+GET {{baseUrl}}/integrations/google/gmail/messages/{{userId}}
+
+### Get Outlook Calendar events
+# @name getOutlookCalendarEvents
+GET {{baseUrl}}/integrations/outlook/calendar/events/{{userId}}
+
+### Get Outlook Mail messages
+# @name getOutlookMailMessages
+GET {{baseUrl}}/integrations/outlook/mail/messages/{{userId}}
+
+### === INTEGRATION ERROR SCENARIOS ===
+
+### Test get integrations status with invalid user ID
+# @name getIntegrationsStatusInvalidUser
+GET {{baseUrl}}/integrations/status/invalid-user-id
+
+### Test get Google auth URL with invalid user ID
+# @name getGoogleAuthUrlInvalidUser
+GET {{baseUrl}}/integrations/google/auth-url/invalid-user-id
+
+### Test Google OAuth callback without code
+# @name googleOAuthCallbackNoCode
+POST {{baseUrl}}/integrations/google/callback
+Content-Type: application/json
+
+{
+  "state": "user_{{userId}}"
+}
+
+### Test Google OAuth callback with invalid code
+# @name googleOAuthCallbackInvalidCode
+POST {{baseUrl}}/integrations/google/callback
+Content-Type: application/json
+
+{
+  "code": "invalid-code",
+  "state": "user_{{userId}}"
+}
+
+### Test Outlook OAuth callback without code
+# @name outlookOAuthCallbackNoCode
+POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
+Content-Type: application/json
+
+{
+  "state": "user_{{userId}}"
+}
+
+### Test Outlook OAuth callback with invalid code
+# @name outlookOAuthCallbackInvalidCode
+POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
+Content-Type: application/json
+
+{
+  "code": "invalid-code",
+  "state": "user_{{userId}}"
+}
+
+### Test Google Calendar events without integration
+# @name getGoogleCalendarEventsNoIntegration
+GET {{baseUrl}}/integrations/google/calendar/events/{{userId}}
+
+### Test Gmail messages without integration
+# @name getGmailMessagesNoIntegration
+GET {{baseUrl}}/integrations/google/gmail/messages/{{userId}}
+
+### Test Outlook Calendar events without integration
+# @name getOutlookCalendarEventsNoIntegration
+GET {{baseUrl}}/integrations/outlook/calendar/events/{{userId}}
+
+### Test Outlook Mail messages without integration
+# @name getOutlookMailMessagesNoIntegration
+GET {{baseUrl}}/integrations/outlook/mail/messages/{{userId}}
+
+### Test with non-existent user ID
+# @name getIntegrationsStatusNonExistentUser
+GET {{baseUrl}}/integrations/status/non-existent-user-123
+
+### Test Google Calendar events with non-existent user
+# @name getGoogleCalendarEventsNonExistentUser
+GET {{baseUrl}}/integrations/google/calendar/events/non-existent-user-123
+
+### Test Gmail messages with non-existent user
+# @name getGmailMessagesNonExistentUser
+GET {{baseUrl}}/integrations/google/gmail/messages/non-existent-user-123
+
+### Test Outlook Calendar events with non-existent user
+# @name getOutlookCalendarEventsNonExistentUser
+GET {{baseUrl}}/integrations/outlook/calendar/events/non-existent-user-123
+
+### Test Outlook Mail messages with non-existent user
+# @name getOutlookMailMessagesNonExistentUser
+GET {{baseUrl}}/integrations/outlook/mail/messages/non-existent-user-123

@@ -12,6 +12,8 @@ export const envSchema = v.object({
   GITHUB_CLIENT_SECRET: v.optional(v.string()),
   GOOGLE_CLIENT_ID: v.optional(v.string()),
   GOOGLE_CLIENT_SECRET: v.optional(v.string()),
+  MICROSOFT_CLIENT_ID: v.optional(v.string()),
+  MICROSOFT_CLIENT_SECRET: v.optional(v.string()),
   BETTER_AUTH_SECRET: v.string(),
   BETTER_AUTH_URL: v.optional(v.string()),
   FRONTEND_URL: v.optional(v.string()),
