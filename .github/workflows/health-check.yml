@@ -1,9 +1,9 @@
 name: Health Check
 
 on:
-  schedule:
-    # Run every 5 minutes
-    - cron: "*/5 * * * *"
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -13,13 +13,9 @@ jobs:
     steps:
       - name: Check API Health
         run: |
-          # Check if API is responding
           API_URL="${{ secrets.API_URL || 'https://api.zenithly.com' }}"
-
           echo "🔍 Checking API health at: $API_URL"
-
           response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health || echo "000")
-
           if [ "$response" -eq 200 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
@@ -38,10 +34,8 @@ jobs:
           script: |
             echo "🔍 Checking PM2 status..."
             pm2 status
-
             echo "📝 Last 100 lines of logs:"
             pm2 logs zenithly-server --lines 100
-
             echo "🔄 Attempting to restart application..."
             pm2 restart zenithly-server
 
