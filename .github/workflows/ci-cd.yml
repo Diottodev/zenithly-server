@@ -94,7 +94,7 @@ jobs:
           port: ${{ secrets.EC2_PORT || 22 }}
           script: |
             # Navigate to application directory
-            cd /zenithly-server || cd /var/www/zenithly-server
+            cd zenithly-server || cd /var/www/zenithly-server
 
             # Pull latest changes
             git pull origin master

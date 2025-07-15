@@ -65,7 +65,7 @@ run_remote() {
 deploy_full() {
     log "📦 Executando deploy completo..."
     
-    run_remote "cd /zenithly-server || cd /var/www/zenithly-server"
+    run_remote "cd zenithly-server || cd /var/www/zenithly-server"
     run_remote "git pull origin master"
     run_remote "pnpm install --frozen-lockfile"
     run_remote "pnpm db:migrate"

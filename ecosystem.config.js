@@ -50,7 +50,7 @@ module.exports = {
       host: 'ec2-3-22-100-220.us-east-2.compute.amazonaws.com',
       ref: 'origin/master',
       repo: 'https://github.com/Diottodev/zenithly-server.git',
-      path: '/var/www/zenithly-server',
+      path: 'zenithly-server',
       'pre-deploy-local': '',
       'post-deploy':
         'pnpm install --frozen-lockfile && pnpm db:migrate && pm2 reload ecosystem.config.js --env production',

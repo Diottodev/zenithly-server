@@ -34,7 +34,7 @@ jobs:
             echo "🚀 Starting deployment to ${{ github.event.inputs.environment }}..."
 
             # Set application path
-            APP_PATH="/zenithly-server"
+            APP_PATH="zenithly-server"
             if [ ! -d "$APP_PATH" ]; then
               APP_PATH="/var/www/zenithly-server"
             fi
