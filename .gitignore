@@ -19,6 +19,11 @@ coverage
 *.swo
 *~
 
+# Package managers (keep only pnpm)
+package-lock.json
+yarn.lock
+npm-shrinkwrap.json
+
 # PM2 specific
 .pm2
 ecosystem.config.js.backup
