@@ -1,5 +1,7 @@
+import dotenv from 'dotenv';
 import * as v from 'valibot';
 
+dotenv.config();
 export const envSchema = v.object({
   PORT: v.pipe(v.string(), v.transform(Number)),
   CORS_ORIGIN: v.optional(v.string()),

@@ -1,6 +1,7 @@
 import { log } from 'node:console';
 import { fastifyCors } from '@fastify/cors';
 import { fastifyJwt } from '@fastify/jwt';
+import dotenv from 'dotenv';
 import { fastify } from 'fastify';
 import * as v from 'valibot';
 import { env } from './env.ts';
@@ -8,7 +9,8 @@ import { authRoutes } from './http/routes/auth.routes.ts';
 import { integrationsRoutes } from './http/routes/integrations.routes.ts';
 import { userRoutes } from './http/routes/user.routes.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
-import 'dotenv/config';
+
+dotenv.config();
 
 export function createApp() {
   const app = fastify();
