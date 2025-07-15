@@ -103,18 +103,11 @@ jobs:
             # Instalar dependências
             pnpm install --frozen-lockfile
 
-            # Carregar variáveis de ambiente
-            if [ -f .env ]; then
-              export $(grep -v '^#' .env | xargs)
-            fi
-
-            set -o allexport; source .env; set +o allexport
-
             # Rodar migrações
             pnpm db:migrate
 
             # Reiniciar app no PM2
-            pm2 restart zenithly-server || pm2 start ecosystem.config.cjs
+            pm2 reload ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production
 
             # Mostrar status PM2
             pm2 status
