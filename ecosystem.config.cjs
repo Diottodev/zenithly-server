@@ -4,9 +4,8 @@ module.exports = {
     {
       name: 'zenithly-server',
       script: 'src/server.ts',
-      interpreter: 'node',
-      interpreter_args: '-r ts-node/register',
-      exec_mode: 'cluster',
+      interpreter: 'tsx',
+      exec_mode: 'fork',
       instances: 1,
       watch: false,
       max_memory_restart: '1G',
