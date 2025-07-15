@@ -108,7 +108,7 @@ jobs:
               export $(grep -v '^#' .env | xargs)
             fi
 
-            export $(grep -v '^#' .env | xargs)
+            set -o allexport; source .env; set +o allexport
 
             # Rodar migrações
             pnpm db:migrate
