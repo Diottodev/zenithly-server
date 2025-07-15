@@ -145,7 +145,7 @@ export function createApp() {
 
 // Starting server
 const app = createApp();
-app.listen({ port: env.PORT }, (err) => {
+app.listen({ port: env.PORT, host: '0.0.0.0' }, (err) => {
   if (err) {
     log(err, 'Server failed to start');
     process.exit(1);
