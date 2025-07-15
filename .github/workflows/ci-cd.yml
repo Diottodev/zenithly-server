@@ -103,6 +103,12 @@ jobs:
             # Instalar dependências
             pnpm install --frozen-lockfile
 
+            # Carregar variáveis de ambiente
+            if [ -f .env ]; then
+              export $(grep -v '^#' .env | xargs)
+            fi
+            export $(grep -v '^#' /home/ubuntu/zenithly-server/.env | xargs)
+
             # Rodar migrações
             pnpm db:migrate
 

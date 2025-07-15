@@ -13,15 +13,16 @@ module.exports = {
       max_memory_restart: '1G',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        PORT: 8080,
+        DATABASE_URL: 'postgres://user:password@localhost:5432/zenithly',
       },
       env_development: {
         NODE_ENV: 'development',
-        PORT: 3000,
+        PORT: 8080,
       },
       env_staging: {
         NODE_ENV: 'staging',
-        PORT: 3000,
+        PORT: 8080,
       },
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       error_file: './logs/pm2-error.log',
