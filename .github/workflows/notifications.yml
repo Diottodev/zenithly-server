@@ -10,102 +10,74 @@ jobs:
   notify-deployment:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion != 'cancelled'
-    
+
     steps:
-    - name: Get workflow conclusion
-      id: workflow
-      run: |
-        echo "conclusion=${{ github.event.workflow_run.conclusion }}" >> $GITHUB_OUTPUT
-        echo "branch=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
-        echo "commit=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
-        echo "actor=${{ github.event.workflow_run.actor.login }}" >> $GITHUB_OUTPUT
+      - name: Get workflow conclusion
+        id: workflow
+        run: |
+          echo "conclusion=${{ github.event.workflow_run.conclusion }}" >> $GITHUB_OUTPUT
+          echo "branch=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
+          echo "commit=${{ github.event.workflow_run.head_sha }}" >> $GITHUB_OUTPUT
+          echo "actor=${{ github.event.workflow_run.actor.login }}" >> $GITHUB_OUTPUT
 
-    - name: Send Discord notification on success
-      if: github.event.workflow_run.conclusion == 'success'
-      uses: sarisia/actions-status-discord@v1
-      with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "✅ Deploy Successful!"
-        description: |
-          **Branch:** ${{ steps.workflow.outputs.branch }}
-          **Commit:** ${{ steps.workflow.outputs.commit }}
-          **Actor:** ${{ steps.workflow.outputs.actor }}
-          
-          🚀 Zenithly Server deployed successfully!
-        color: 0x00ff00
+      - name: Send Discord notification on success
+        if: github.event.workflow_run.conclusion == 'success'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "✅ Deploy Successful!"
+          description: |
+            **Branch:** ${{ steps.workflow.outputs.branch }}
+            **Commit:** ${{ steps.workflow.outputs.commit }}
+            **Actor:** ${{ steps.workflow.outputs.actor }}
 
-    - name: Send Discord notification on failure
-      if: github.event.workflow_run.conclusion == 'failure'
-      uses: sarisia/actions-status-discord@v1
-      with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "❌ Deploy Failed!"
-        description: |
-          **Branch:** ${{ steps.workflow.outputs.branch }}
-          **Commit:** ${{ steps.workflow.outputs.commit }}
-          **Actor:** ${{ steps.workflow.outputs.actor }}
-          
-          🚨 Zenithly Server deployment failed!
-          Check the logs: ${{ github.event.workflow_run.html_url }}
-        color: 0xff0000
+            🚀 Zenithly Server deployed successfully!
+          color: 0x00ff00
 
-    - name: Send Slack notification on success
-      if: github.event.workflow_run.conclusion == 'success' && secrets.SLACK_WEBHOOK
-      uses: 8398a7/action-slack@v3
-      with:
-        status: success
-        text: |
-          🚀 *Zenithly Server* deployed successfully!
-          
-          *Branch:* ${{ steps.workflow.outputs.branch }}
-          *Commit:* ${{ steps.workflow.outputs.commit }}
-          *Actor:* ${{ steps.workflow.outputs.actor }}
-        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Send Discord notification on failure
+        if: github.event.workflow_run.conclusion == 'failure'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "❌ Deploy Failed!"
+          description: |
+            **Branch:** ${{ steps.workflow.outputs.branch }}
+            **Commit:** ${{ steps.workflow.outputs.commit }}
+            **Actor:** ${{ steps.workflow.outputs.actor }}
 
-    - name: Send Slack notification on failure
-      if: github.event.workflow_run.conclusion == 'failure' && secrets.SLACK_WEBHOOK
-      uses: 8398a7/action-slack@v3
-      with:
-        status: failure
-        text: |
-          🚨 *Zenithly Server* deployment failed!
-          
-          *Branch:* ${{ steps.workflow.outputs.branch }}
-          *Commit:* ${{ steps.workflow.outputs.commit }}
-          *Actor:* ${{ steps.workflow.outputs.actor }}
-          
-          Check the logs: ${{ github.event.workflow_run.html_url }}
-        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+            🚨 Zenithly Server deployment failed!
+            Check the logs: ${{ github.event.workflow_run.html_url }}
+          color: 0xff0000
 
   notify-health-check:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    
-    steps:
-    - name: Check API Health
-      id: health
-      run: |
-        API_URL="${{ secrets.API_URL || 'https://api.zenithly.com' }}"
-        response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health || echo "000")
-        
-        if [ "$response" -eq 200 ]; then
-          echo "status=healthy" >> $GITHUB_OUTPUT
-        else
-          echo "status=unhealthy" >> $GITHUB_OUTPUT
-          echo "http_code=$response" >> $GITHUB_OUTPUT
-        fi
 
-    - name: Send unhealthy notification
-      if: steps.health.outputs.status == 'unhealthy'
-      uses: sarisia/actions-status-discord@v1
-      with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "🚨 API Health Check Failed!"
-        description: |
-          The Zenithly API is not responding correctly.
-          
-          **HTTP Status:** ${{ steps.health.outputs.http_code }}
-          **Time:** ${{ github.event.head_commit.timestamp }}
-          
-          Automatic restart attempt will be made.
-        color: 0xff0000
+    steps:
+      - name: Check API Health
+        id: health
+        run: |
+          API_URL="${{ secrets.API_URL || 'https://api.zenithly.com' }}"
+          response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health || echo "000")
+
+          if [ "$response" -eq 200 ]; then
+            echo "status=healthy" >> $GITHUB_OUTPUT
+          else
+            echo "status=unhealthy" >> $GITHUB_OUTPUT
+            echo "http_code=$response" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send unhealthy notification
+        if: steps.health.outputs.status == 'unhealthy'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "🚨 API Health Check Failed!"
+          description: |
+            The Zenithly API is not responding correctly.
+
+            **HTTP Status:** ${{ steps.health.outputs.http_code }}
+            **Time:** ${{ github.event.head_commit.timestamp }}
+
+            Automatic restart attempt will be made.
+          color: 0xff0000

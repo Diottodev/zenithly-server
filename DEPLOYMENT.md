@@ -13,6 +13,7 @@ Este projeto inclui um sistema completo de CI/CD com GitHub Actions para deploy 
 ## 📋 Pré-requisitos
 
 ### No servidor EC2:
+
 - Ubuntu 20.04+ ou Amazon Linux 2
 - Node.js 20+
 - pnpm
@@ -21,6 +22,7 @@ Este projeto inclui um sistema completo de CI/CD com GitHub Actions para deploy 
 - Git
 
 ### No GitHub:
+
 - Repositório com acesso às GitHub Actions
 - Secrets configurados (veja seção abaixo)
 
@@ -42,12 +44,14 @@ chmod +x setup-server.sh
 Vá até `Settings > Secrets and variables > Actions` no seu repositório GitHub e adicione:
 
 #### Secrets Obrigatórios:
+
 - `EC2_HOST`: IP público ou hostname do seu servidor EC2
 - `EC2_USER`: Usuário SSH (geralmente `ubuntu` ou `ec2-user`)
 - `EC2_SSH_KEY`: Sua chave SSH privada para conectar ao EC2
 - `EC2_PORT`: Porta SSH (padrão: 22)
 
 #### Secrets Opcionais:
+
 - `API_URL`: URL da sua API para health check (ex: `https://api.zenithly.com`)
 - `SLACK_WEBHOOK`: Webhook do Slack para notificações de falhas
 
@@ -76,6 +80,7 @@ BETTER_AUTH_URL=https://seu-dominio.com
 ## 📁 Estrutura dos Workflows
 
 ### 1. CI/CD Principal (`.github/workflows/ci-cd.yml`)
+
 - **Trigger**: Push para `master` ou Pull Request
 - **Funcionalidades**:
   - Executa testes com PostgreSQL
@@ -84,6 +89,7 @@ BETTER_AUTH_URL=https://seu-dominio.com
   - Reinicia PM2
 
 ### 2. Deploy Manual (`.github/workflows/deploy.yml`)
+
 - **Trigger**: Manual via GitHub Actions
 - **Funcionalidades**:
   - Deploy para production ou staging
@@ -91,6 +97,7 @@ BETTER_AUTH_URL=https://seu-dominio.com
   - Logs detalhados do processo
 
 ### 3. Health Check (`.github/workflows/health-check.yml`)
+
 - **Trigger**: A cada 5 minutos (cron) ou manual
 - **Funcionalidades**:
   - Verifica se a API está respondendo
@@ -124,6 +131,7 @@ pm2 reload ecosystem.config.js
 ### Via GitHub Actions:
 
 1. **Deploy Manual**:
+
    - Vá para `Actions > Deploy to EC2`
    - Clique em `Run workflow`
    - Escolha o ambiente e opções
@@ -135,9 +143,11 @@ pm2 reload ecosystem.config.js
 ## 📊 Monitoramento
 
 ### Endpoints de Health Check:
+
 - `GET /health`: Retorna status da aplicação e database
 
 ### Logs:
+
 - PM2 logs: `~/zenithly-server/logs/`
 - Aplicação: `pm2 logs zenithly-server`
 
@@ -151,16 +161,19 @@ pm2 reload ecosystem.config.js
 ## 🚨 Solução de Problemas
 
 ### Deploy falha:
+
 1. Verifique se os secrets estão configurados corretamente
 2. Confirme se o servidor EC2 está acessível
 3. Verifique os logs do GitHub Actions
 
 ### Aplicação não inicia:
+
 1. Verifique o arquivo `.env`
 2. Confirme se o banco de dados está rodando
 3. Verifique os logs do PM2: `pm2 logs zenithly-server`
 
 ### Health check falha:
+
 1. Verifique se a aplicação está rodando: `pm2 status`
 2. Teste o endpoint manualmente: `curl localhost:3000/health`
 3. Verifique logs de erro: `pm2 logs zenithly-server --err`
@@ -168,15 +181,19 @@ pm2 reload ecosystem.config.js
 ## 📝 Personalização
 
 ### Alterar configurações do PM2:
+
 Edite o arquivo `ecosystem.config.js` e execute:
+
 ```bash
 pm2 reload ecosystem.config.js
 ```
 
 ### Adicionar novos workflows:
+
 Crie novos arquivos `.yml` na pasta `.github/workflows/`
 
 ### Modificar health check:
+
 Edite o endpoint `/health` no arquivo `src/server.ts`
 
 ## 🔒 Segurança
@@ -190,6 +207,7 @@ Edite o endpoint `/health` no arquivo `src/server.ts`
 ## 📞 Suporte
 
 Se tiver problemas:
+
 1. Verifique os logs do GitHub Actions
 2. Confirme a configuração dos secrets
 3. Teste a conexão SSH manualmente

@@ -5,17 +5,20 @@
 O sistema de CI/CD foi configurado com os seguintes arquivos:
 
 ### GitHub Actions (`.github/workflows/`)
+
 - `ci-cd.yml` - Pipeline principal de CI/CD
 - `deploy.yml` - Deploy manual
 - `health-check.yml` - Monitoramento automático
 - `notifications.yml` - Notificações Discord/Slack
 
 ### Scripts (`scripts/`)
+
 - `setup-server.sh` - Setup inicial do servidor EC2
 - `deploy.sh` - Deploy manual
 - `monitor.sh` - Monitoramento da aplicação
 
 ### Configuração
+
 - `ecosystem.config.js` - Configuração do PM2
 - `DEPLOYMENT.md` - Documentação completa
 - `README.md` - Documentação atualizada
@@ -27,12 +30,14 @@ O sistema de CI/CD foi configurado com os seguintes arquivos:
 Vá para `Settings > Secrets and variables > Actions` no seu repositório e adicione:
 
 **Obrigatórios:**
+
 - `EC2_HOST` - IP ou hostname do seu EC2
 - `EC2_USER` - Usuário SSH (ex: ubuntu)
 - `EC2_SSH_KEY` - Sua chave SSH privada
 - `EC2_PORT` - Porta SSH (padrão: 22)
 
 **Opcionais:**
+
 - `API_URL` - URL da sua API para health check
 - `DISCORD_WEBHOOK` - Webhook do Discord para notificações
 - `SLACK_WEBHOOK` - Webhook do Slack para notificações
@@ -40,6 +45,7 @@ Vá para `Settings > Secrets and variables > Actions` no seu repositório e adic
 ### 2. Configurar o Servidor EC2
 
 **Opção 1: Usar o script automático**
+
 ```bash
 # No servidor EC2
 curl -o setup-server.sh https://raw.githubusercontent.com/Diottodev/zenithly-server/master/scripts/setup-server.sh
@@ -48,6 +54,7 @@ chmod +x setup-server.sh
 ```
 
 **Opção 2: Manual**
+
 ```bash
 # Instalar dependências
 sudo apt update && sudo apt upgrade -y
@@ -110,24 +117,28 @@ git push origin master
 ## 🚀 Funcionalidades Disponíveis
 
 ### Deploy Automático
+
 - ✅ Testes automáticos no PR/push
 - ✅ Deploy automático no push para master
 - ✅ Reinicialização automática do PM2
 - ✅ Migrações automáticas do banco
 
 ### Monitoramento
+
 - ✅ Health check a cada 5 minutos
 - ✅ Reinício automático em caso de falha
 - ✅ Notificações no Discord/Slack
 - ✅ Logs detalhados
 
 ### Deploy Manual
+
 - ✅ Deploy via GitHub Actions
 - ✅ Deploy via script local
 - ✅ Opção de apenas reiniciar
 - ✅ Logs em tempo real
 
 ### Ferramentas de Monitoramento
+
 - ✅ Script de monitoramento completo
 - ✅ Health check detalhado
 - ✅ Logs estruturados
@@ -136,6 +147,7 @@ git push origin master
 ## 🛠 Comandos Úteis
 
 ### No servidor EC2:
+
 ```bash
 # Status da aplicação
 pm2 status
@@ -151,6 +163,7 @@ pm2 monit
 ```
 
 ### Localmente:
+
 ```bash
 # Deploy manual
 ./scripts/deploy.sh ubuntu@seu-servidor.com

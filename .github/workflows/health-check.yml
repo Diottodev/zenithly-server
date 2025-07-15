@@ -3,58 +3,58 @@ name: Health Check
 on:
   schedule:
     # Run every 5 minutes
-    - cron: '*/5 * * * *'
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
   health-check:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Check API Health
-      run: |
-        # Check if API is responding
-        API_URL="${{ secrets.API_URL || 'https://api.zenithly.com' }}"
-        
-        echo "🔍 Checking API health at: $API_URL"
-        
-        response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health || echo "000")
-        
-        if [ "$response" -eq 200 ]; then
-          echo "✅ API is healthy (HTTP $response)"
-        else
-          echo "❌ API is not responding correctly (HTTP $response)"
-          exit 1
-        fi
+      - name: Check API Health
+        run: |
+          # Check if API is responding
+          API_URL="${{ secrets.API_URL || 'https://api.zenithly.com' }}"
 
-    - name: Check PM2 Status
-      if: failure()
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: ${{ secrets.EC2_PORT || 22 }}
-        script: |
-          echo "🔍 Checking PM2 status..."
-          pm2 status
-          
-          echo "📝 Last 100 lines of logs:"
-          pm2 logs zenithly-server --lines 100
-          
-          echo "🔄 Attempting to restart application..."
-          pm2 restart zenithly-server
+          echo "🔍 Checking API health at: $API_URL"
 
-    - name: Send Discord notification on failure
-      if: failure()
-      uses: sarisia/actions-status-discord@v1
-      with:
-        webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "🚨 API Health Check Failed!"
-        description: |
-          The Zenithly API is not responding correctly.
-          
-          **Time:** ${{ github.event.head_commit.timestamp }}
-          
-          Automatic restart attempt has been made.
-        color: 0xff0000
+          response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health || echo "000")
+
+          if [ "$response" -eq 200 ]; then
+            echo "✅ API is healthy (HTTP $response)"
+          else
+            echo "❌ API is not responding correctly (HTTP $response)"
+            exit 1
+          fi
+
+      - name: Check PM2 Status
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          script: |
+            echo "🔍 Checking PM2 status..."
+            pm2 status
+
+            echo "📝 Last 100 lines of logs:"
+            pm2 logs zenithly-server --lines 100
+
+            echo "🔄 Attempting to restart application..."
+            pm2 restart zenithly-server
+
+      - name: Send Discord notification on failure
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "🚨 API Health Check Failed!"
+          description: |
+            The Zenithly API is not responding correctly.
+
+            **Time:** ${{ github.event.head_commit.timestamp }}
+
+            Automatic restart attempt has been made.
+          color: 0xff0000

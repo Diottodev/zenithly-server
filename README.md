@@ -71,17 +71,20 @@ PORT=3000
 O projeto inclui CI/CD automático com GitHub Actions:
 
 1. **Configure os secrets no GitHub**:
+
    - `EC2_HOST`: IP do seu servidor EC2
    - `EC2_USER`: Usuário SSH (ex: ubuntu)
    - `EC2_SSH_KEY`: Chave SSH privada
    - `EC2_PORT`: Porta SSH (padrão: 22)
 
 2. **Configure o servidor EC2**:
+
    ```bash
    ./scripts/setup-server.sh
    ```
 
 3. **Faça push para master**:
+
    ```bash
    git push origin master
    ```
@@ -126,20 +129,20 @@ pnpm test:coverage
 
 ## 📊 Scripts Disponíveis
 
-| Script | Descrição |
-|--------|-----------|
-| `pnpm dev` | Inicia servidor em modo desenvolvimento |
-| `pnpm start` | Inicia servidor em modo produção |
-| `pnpm test` | Executa todos os testes |
-| `pnpm test:watch` | Executa testes em modo watch |
-| `pnpm test:coverage` | Executa testes com coverage |
-| `pnpm lint` | Executa linting |
-| `pnpm format` | Formata código |
-| `pnpm db:generate` | Gera migrações do banco |
-| `pnpm db:migrate` | Executa migrações |
-| `pnpm deploy` | Deploy manual |
-| `pnpm monitor` | Monitor da aplicação |
-| `pnpm setup-server` | Setup inicial do servidor |
+| Script               | Descrição                               |
+| -------------------- | --------------------------------------- |
+| `pnpm dev`           | Inicia servidor em modo desenvolvimento |
+| `pnpm start`         | Inicia servidor em modo produção        |
+| `pnpm test`          | Executa todos os testes                 |
+| `pnpm test:watch`    | Executa testes em modo watch            |
+| `pnpm test:coverage` | Executa testes com coverage             |
+| `pnpm lint`          | Executa linting                         |
+| `pnpm format`        | Formata código                          |
+| `pnpm db:generate`   | Gera migrações do banco                 |
+| `pnpm db:migrate`    | Executa migrações                       |
+| `pnpm deploy`        | Deploy manual                           |
+| `pnpm monitor`       | Monitor da aplicação                    |
+| `pnpm setup-server`  | Setup inicial do servidor               |
 
 ## 🏥 Health Check
 
@@ -196,16 +199,18 @@ O projeto inclui configuração completa do PM2 no arquivo `ecosystem.config.js`
 
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'zenithly-server',
-    script: 'src/server.ts',
-    instances: 1,
-    exec_mode: 'cluster',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3000
-    }
-  }]
+  apps: [
+    {
+      name: "zenithly-server",
+      script: "src/server.ts",
+      instances: 1,
+      exec_mode: "cluster",
+      env: {
+        NODE_ENV: "production",
+        PORT: 3000,
+      },
+    },
+  ],
 };
 ```
 
@@ -228,19 +233,21 @@ module.exports = {
 ### Problemas Comuns
 
 1. **Erro de conexão com banco**:
+
    ```bash
    # Verificar se PostgreSQL está rodando
    sudo systemctl status postgresql
-   
+
    # Verificar configuração
    psql -U zenithly -d zenithly -h localhost
    ```
 
 2. **Aplicação não inicia**:
+
    ```bash
    # Verificar logs do PM2
    pm2 logs zenithly-server
-   
+
    # Verificar arquivo .env
    cat .env
    ```
@@ -276,13 +283,6 @@ tail -f /var/log/nginx/error.log
 ## 📝 Licença
 
 Este projeto está sob a licença ISC.
-
-## 📞 Suporte
-
-Para suporte, entre em contato:
-
-- **GitHub**: [Diottodev](https://github.com/Diottodev)
-- **Email**: seu-email@exemplo.com
 
 ## 📚 Documentação Adicional
 
