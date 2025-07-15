@@ -3,7 +3,6 @@ node_modules
 .env.local
 .env.production
 .env.staging
-src/db/migrations
 dist
 build
 logs
