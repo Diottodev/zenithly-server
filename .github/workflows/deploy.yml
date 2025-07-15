@@ -39,6 +39,10 @@ jobs:
               APP_PATH="/var/www/zenithly-server"
             fi
 
+            if [ ! -d "$APP_PATH/.git" ]; then
+              git clone git@github.com:Diottodev/zenithly-server.git $APP_PATH
+            fi
+
             cd $APP_PATH
 
             if [ "${{ github.event.inputs.restart_only }}" == "true" ]; then
