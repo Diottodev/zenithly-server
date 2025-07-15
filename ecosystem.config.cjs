@@ -5,8 +5,7 @@ module.exports = {
       name: 'zenithly-server',
       script: 'src/server.ts',
       interpreter: 'node',
-      interpreter_args:
-        '--env-file .env --experimental-strip-types --no-warnings',
+      interpreter_args: '--env-file=.env --experimental-strip-types --no-warnings',
       instances: 1,
       exec_mode: 'cluster',
       watch: false,
