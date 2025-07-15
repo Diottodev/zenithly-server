@@ -4,22 +4,23 @@ module.exports = {
       name: 'zenithly-server',
       script: 'src/server.ts',
       interpreter: 'node',
-      interpreter_args: '--env-file .env --experimental-strip-types --no-warnings',
+      interpreter_args:
+        '--env-file .env --experimental-strip-types --no-warnings',
       instances: 1,
       exec_mode: 'cluster',
       watch: false,
       max_memory_restart: '1G',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000
+        PORT: 3000,
       },
       env_development: {
         NODE_ENV: 'development',
-        PORT: 3000
+        PORT: 3000,
       },
       env_staging: {
         NODE_ENV: 'staging',
-        PORT: 3000
+        PORT: 3000,
       },
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       error_file: './logs/pm2-error.log',
@@ -39,8 +40,8 @@ module.exports = {
       kill_timeout: 5000,
       listen_timeout: 8000,
       // Environment variables for the app
-      env_file: '.env'
-    }
+      env_file: '.env',
+    },
   ],
 
   deploy: {
@@ -51,8 +52,9 @@ module.exports = {
       repo: 'https://github.com/Diottodev/zenithly-server.git',
       path: '/var/www/zenithly-server',
       'pre-deploy-local': '',
-      'post-deploy': 'pnpm install --frozen-lockfile && pnpm db:migrate && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': ''
-    }
-  }
+      'post-deploy':
+        'pnpm install --frozen-lockfile && pnpm db:migrate && pm2 reload ecosystem.config.js --env production',
+      'pre-setup': '',
+    },
+  },
 };

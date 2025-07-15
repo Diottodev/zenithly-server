@@ -20,7 +20,7 @@ export default fp((fastify, _opts, done) => {
   });
   // Register the auth handler for API routes
   fastify.register((app) => {
-    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: OAuth flow requires complex logic
     app.all('/api/auth/*', async (request, reply) => {
       app.log.info(`Better Auth request: ${request.method} ${request.url}`);
       // Garantir headers CORS para todas as requisições de auth

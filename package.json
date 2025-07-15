@@ -14,7 +14,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "biome check",
-    "format": "biome format",
+    "format": "biome format --write",
     "precommit": "lefthook run precommit",
     "deploy": "bash scripts/deploy.sh",
     "monitor": "bash scripts/monitor.sh",

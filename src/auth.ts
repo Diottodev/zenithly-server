@@ -42,7 +42,7 @@ export const auth = betterAuth({
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:8080',
-    env.FRONTEND_URL || 'http://localhost:3000'
+    env.FRONTEND_URL || 'http://localhost:3000',
   ],
 });
 

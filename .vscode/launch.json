@@ -6,9 +6,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": [
-        "run"
-      ],
+      "args": ["run"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": {
@@ -20,9 +18,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": [
-        "--watch"
-      ],
+      "args": ["--watch"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": {
@@ -34,10 +30,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": [
-        "run",
-        "${relativeFile}"
-      ],
+      "args": ["run", "${relativeFile}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": {
@@ -49,10 +42,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-      "args": [
-        "run",
-        "--coverage"
-      ],
+      "args": ["run", "--coverage"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": {

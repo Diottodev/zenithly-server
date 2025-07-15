@@ -103,7 +103,7 @@ export function createApp() {
   app.register(userRoutes);
   app.register(authRoutes);
   app.register(integrationsRoutes);
-  
+
   // Health check endpoint
   app.get('/health', async () => {
     const healthCheck: {
@@ -124,17 +124,17 @@ export function createApp() {
       environment: env.NODE_ENV,
       version: process.version,
     };
-    
+
     try {
       // Test database connection
       const { db } = await import('./db/connection.ts');
       await db.execute('SELECT 1');
       healthCheck.database = 'connected';
-    } catch (error) {
+    } catch (_error) {
       healthCheck.database = 'disconnected';
       healthCheck.status = 'ERROR';
     }
-    
+
     return healthCheck;
   });
   return app;

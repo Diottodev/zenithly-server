@@ -99,7 +99,8 @@ export function authRoutes(app: FastifyInstance) {
   // GET /auth/session - Verify current session using better-auth
   app.get('/auth/session', async (request, reply) => {
     try {
-      const sessionToken = extractSessionToken(request.headers.cookie);      if (!sessionToken) {
+      const sessionToken = extractSessionToken(request.headers.cookie);
+      if (!sessionToken) {
         return reply.code(401).send({
           error: 'Não autenticado',
           message: 'Token de sessão não fornecido',
