@@ -47,7 +47,7 @@ jobs:
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/zenithly_test" > .env
           echo "JWT_SECRET=test_secret_key_for_testing_only" >> .env
           echo "BETTER_AUTH_SECRET=test_better_auth_secret_for_testing" >> .env
-          echo "PORT=3000" >> .env
+          echo "PORT=8080" >> .env
           echo "NODE_ENV=test" >> .env
 
       - name: Run database migrations
