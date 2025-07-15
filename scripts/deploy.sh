@@ -65,7 +65,7 @@ run_remote() {
 deploy_full() {
     log "📦 Executando deploy completo..."
     
-    run_remote "cd /home/\$USER/zenithly-server || cd /var/www/zenithly-server"
+    run_remote "cd /zenithly-server || cd /var/www/zenithly-server"
     run_remote "git pull origin master"
     run_remote "pnpm install --frozen-lockfile"
     run_remote "pnpm db:migrate"
@@ -95,7 +95,7 @@ run_remote "pm2 logs zenithly-server --lines 10"
 
 # Testar health check
 log "🏥 Testando health check..."
-HEALTH_CHECK=$(run_remote "curl -s http://localhost:3000/health || echo 'FAILED'")
+HEALTH_CHECK=$(run_remote "curl -s http://localhost:8080/health || echo 'FAILED'")
 
 if echo "$HEALTH_CHECK" | grep -q '"status":"OK"'; then
     log "✅ Health check passou! Aplicação está saudável."

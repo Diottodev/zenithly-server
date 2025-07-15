@@ -82,7 +82,7 @@ show_logs() {
 test_health() {
     log "🏥 Testando health check..."
     
-    HEALTH_RESULT=$(run_remote "curl -s http://localhost:3000/health 2>/dev/null || echo 'FAILED'")
+    HEALTH_RESULT=$(run_remote "curl -s http://localhost:8080/health 2>/dev/null || echo 'FAILED'")
     
     if echo "$HEALTH_RESULT" | grep -q '"status":"OK"'; then
         log "✅ Health check passou!"
@@ -163,4 +163,4 @@ echo "  ssh $SERVER 'pm2 status'"
 echo "  ssh $SERVER 'pm2 logs zenithly-server'"
 echo "  ssh $SERVER 'pm2 restart zenithly-server'"
 echo "  ssh $SERVER 'pm2 monit'"
-echo "  ssh $SERVER 'curl http://localhost:3000/health'"
+echo "  ssh $SERVER 'curl http://localhost:8080/health'"
