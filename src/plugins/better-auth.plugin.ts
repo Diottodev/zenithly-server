@@ -1,5 +1,6 @@
 import fp from 'fastify-plugin';
 import { auth } from '../auth.ts';
+import { env } from '../env.ts';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -12,19 +13,44 @@ export default fp((fastify, _opts, done) => {
   // Log de debug para todas as rotas registradas
   fastify.addHook('onRoute', (routeOptions) => {
     if (routeOptions.url.includes('/api/auth')) {
-      fastify.log.info(`Registrando rota Better Auth: ${routeOptions.method} ${routeOptions.url}`);
+      fastify.log.info(
+        `Registrando rota Better Auth: ${routeOptions.method} ${routeOptions.url}`
+      );
     }
   });
   // Register the auth handler for API routes
   fastify.register((app) => {
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
     app.all('/api/auth/*', async (request, reply) => {
       app.log.info(`Better Auth request: ${request.method} ${request.url}`);
+      // Garantir headers CORS para todas as requisições de auth
+      reply.header(
+        'Access-Control-Allow-Origin',
+        env.FRONTEND_URL || 'http://localhost:3000'
+      );
+      reply.header('Access-Control-Allow-Credentials', 'true');
+      reply.header(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PUT, DELETE, OPTIONS'
+      );
+      reply.header(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization, Cookie'
+      );
+
+      // Handle preflight requests
+      if (request.method === 'OPTIONS') {
+        return reply.code(200).send();
+      }
+
       const url = new URL(request.url, `http://${request.headers.host}`);
       // Preparar headers, incluindo cookies
       const headers = new Headers();
       for (const [key, value] of Object.entries(request.headers)) {
         if (Array.isArray(value)) {
-          value.forEach(v => headers.append(key, v));
+          for (const v of value) {
+            headers.append(key, v);
+          }
         } else if (value) {
           headers.set(key, value);
         }
@@ -59,13 +85,13 @@ export default fp((fastify, _opts, done) => {
           return reply
             .code(response.status)
             .send(body ? JSON.parse(body) : undefined);
-        } else {
-          const body = await response.text();
-          return reply
-            .code(response.status)
-            .type(contentType || 'text/plain')
-            .send(body);
         }
+
+        const body = await response.text();
+        return reply
+          .code(response.status)
+          .type(contentType || 'text/plain')
+          .send(body);
       } catch (error) {
         app.log.error(error, 'Erro no handler do better-auth');
         return reply.code(500).send({

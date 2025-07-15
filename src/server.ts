@@ -5,13 +5,17 @@ import { fastify } from 'fastify';
 import * as v from 'valibot';
 import { env } from './env.ts';
 import { authRoutes } from './http/routes/auth.routes.ts';
+import { integrationsRoutes } from './http/routes/integrations.routes.ts';
 import { userRoutes } from './http/routes/user.routes.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
 
 export function createApp() {
   const app = fastify();
   app.register(fastifyCors, {
-    origin: env.CORS_ORIGIN || '*',
+    origin: [env.FRONTEND_URL || 'http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   });
   app.register(fastifyJwt, {
     secret: env.JWT_SECRET,
@@ -98,6 +102,7 @@ export function createApp() {
   });
   app.register(userRoutes);
   app.register(authRoutes);
+  app.register(integrationsRoutes);
   app.get('/health', () => {
     return { status: 'OK' };
   });
