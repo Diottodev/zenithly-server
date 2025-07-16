@@ -54,7 +54,7 @@ module.exports = {
   deploy: {
     production: {
       user: 'ubuntu',
-      host: 'ec2-3-22-100-220.us-east-2.compute.amazonaws.com',
+      host: 'ec2-18-231-26-160.sa-east-1.compute.amazonaws.com',
       ref: 'origin/master',
       repo: 'https://github.com/Diottodev/zenithly-server.git',
       path: 'zenithly-server',
