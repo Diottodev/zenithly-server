@@ -10,5 +10,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",
     "source.organizeImports.biome": "explicit"
-  }
+  },
+  "editor.fontSize": 16,
+  "editor.mouseWheelZoom": true
 }
