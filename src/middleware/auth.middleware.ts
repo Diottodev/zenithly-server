@@ -1,4 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { extractSessionToken } from '@/utils/extract-session-token.ts';
 
 type TAuthenticatedRequest = FastifyRequest & {
   currentUser?: unknown;
@@ -10,7 +11,9 @@ export async function authMiddleware(
   reply: FastifyReply
 ) {
   try {
-    const sessionToken = request.headers.authorization?.replace('Bearer ', '');
+    const sessionToken = extractSessionToken({
+      cookie: request.headers.cookie,
+    });
     if (!sessionToken) {
       return reply.code(401).send({
         error: 'Não autenticado',
@@ -19,7 +22,7 @@ export async function authMiddleware(
     }
     const sessionData = await request.server.betterAuth.api.getSession({
       headers: new Headers({
-        authorization: `Bearer ${sessionToken}`,
+        cookie: `better-auth.session_token=${sessionToken}`,
       }),
     });
     if (!sessionData?.user) {

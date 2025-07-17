@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { extractSessionToken } from '@/utils/extract-session-token.ts';
 import { env } from '../../env.ts';
 import { handleAuthError } from '../handlers/handle-error-auth.ts';
 import {
@@ -8,18 +9,6 @@ import {
 } from '../schemas/user-routes.schema.ts';
 import type { THandleError } from '../types/handle-error-login.ts';
 
-const SESSION_TOKEN_REGEX = /better-auth\.session_token=([^;]+)/;
-
-function extractSessionToken(
-  cookieHeader: string | undefined
-): string | undefined {
-  if (!cookieHeader) {
-    return;
-  }
-  const decodedCookie = decodeURIComponent(cookieHeader);
-  const match = decodedCookie.match(SESSION_TOKEN_REGEX);
-  return match ? match[1] : undefined;
-}
 export function authRoutes(app: FastifyInstance) {
   // POST /auth/login - Login with email and password using better-auth
   app.post<{
@@ -99,7 +88,9 @@ export function authRoutes(app: FastifyInstance) {
   // GET /auth/session - Verify current session using better-auth
   app.get('/auth/session', async (request, reply) => {
     try {
-      const sessionToken = extractSessionToken(request.headers.cookie);
+      const sessionToken = extractSessionToken({
+        cookie: request.headers.cookie,
+      });
       if (!sessionToken) {
         return reply.code(401).send({
           error: 'Não autenticado',
@@ -230,7 +221,7 @@ export function authRoutes(app: FastifyInstance) {
     try {
       let token = request.query.token;
       if (!token) {
-        token = extractSessionToken(request.headers.cookie);
+        token = extractSessionToken({ cookie: request.headers.cookie });
       }
       if (token) {
         const sessionData = await app.betterAuth.api.getSession({
