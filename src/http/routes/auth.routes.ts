@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/suspicious/noConsole: any */
 
-import crypto from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { env } from '../../env.ts';
 import { extractSessionToken } from '../../utils/extract-session-token.ts';
@@ -172,21 +171,21 @@ export function authRoutes(app: FastifyInstance) {
   );
 
   // GET /auth/github - GitHub OAuth login
-  app.get('/auth/github', async (request, reply) => {
+  app.get('/auth/github', async (_request, reply) => {
     try {
-      const token = extractSessionToken({
-        cookie: request.headers.cookie,
-      });
-      let githubToken: string | undefined = token;
-      if (!token) {
-        githubToken = crypto.randomUUID(); // Generate a new token if not present
-      }
+      // const token = extractSessionToken({
+      //   cookie: request.headers.cookie,
+      // });
+      // let githubToken: string | undefined = token;
+      // if (!token) {
+      //   githubToken = crypto.randomUUID(); // Generate a new token if not present
+      // }
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
-          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token || githubToken}`,
         },
       });
+      console.log(`GitHub OAuth URL: ${githubResult}`);
       if (!githubResult?.url) {
         return reply.code(500).send({
           error: 'Erro na autenticação',
@@ -206,36 +205,37 @@ export function authRoutes(app: FastifyInstance) {
     }
   });
 
-  // GET /auth/google - Google OAuth login
-  app.get('/auth/google', async (request, reply) => {
-    try {
-      const token = extractSessionToken({
-        cookie: request.headers.cookie,
-      });
-      const googleResult = await app.betterAuth.api.signInSocial({
-        body: {
-          provider: 'google',
-          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token}`,
-        },
-      });
-      if (!googleResult?.url) {
-        return reply.code(500).send({
-          error: 'Erro na autenticação',
-          message: 'Não foi possível iniciar login com Google',
-        });
-      }
-      return reply.code(200).send({
-        url: googleResult.url,
-        provider: 'google',
-      });
-    } catch (error) {
-      app.log.error(error, 'Erro no login Google');
-      return reply.code(500).send({
-        error: 'Erro interno do servidor',
-        message: 'Não foi possível realizar login com Google',
-      });
-    }
-  });
+  // // GET /auth/google - Google OAuth login
+  // app.get('/auth/google', async (request, reply) => {
+  //   try {
+  //     const token = extractSessionToken({
+  //       cookie: request.headers.cookie,
+  //     });
+  //     const googleResult = await app.betterAuth.api.signInSocial({
+  //       body: {
+  //         provider: 'google',
+  //         callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token}`,
+  //       },
+  //       returnHeaders: true,
+  //     });
+  //     if (!googleResult?.url) {
+  //       return reply.code(500).send({
+  //         error: 'Erro na autenticação',
+  //         message: 'Não foi possível iniciar login com Google',
+  //       });
+  //     }
+  //     return reply.code(200).send({
+  //       url: googleResult.url,
+  //       provider: 'google',
+  //     });
+  //   } catch (error) {
+  //     app.log.error(error, 'Erro no login Google');
+  //     return reply.code(500).send({
+  //       error: 'Erro interno do servidor',
+  //       message: 'Não foi possível realizar login com Google',
+  //     });
+  //   }
+  // });
 
   // GET /auth/callback - Callback de sucesso do OAuth
   app.get<{
