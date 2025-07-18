@@ -227,39 +227,34 @@ export function authRoutes(app: FastifyInstance) {
   });
 
   // GET /auth/callback - Callback de sucesso do OAuth
-  app.get<{
-    Querystring: { token?: string };
-  }>('/auth/callback', async (request, reply) => {
+  app.get('/auth/callback', async (request, reply) => {
     try {
-      const token = request.query.token;
-      console.log(request.query);
       const sessionToken = extractSessionToken({
         cookie: request.headers.cookie,
       });
-      console.log(`Token recebido no callback: ${token}`, sessionToken);
-      if (!token) {
+
+      if (!sessionToken) {
         return reply.code(400).send({
           error: 'Token não fornecido',
           message: 'Token de autenticação não encontrado',
         });
       }
-      if (token) {
-        const sessionData = await app.betterAuth.api.getSession({
-          headers: new Headers({
-            authorization: `Bearer ${token}`,
-            cookie: `better-auth.session_token=${token}`,
-          }),
-        });
-        console.log(`Dados da sessão: ${JSON.stringify(sessionData)}`);
-        // Verifica se o usuário está autenticado
-        console.log('Verificando se o usuário está autenticado');
-        if (sessionData?.user) {
-          const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
-          return reply.redirect(
-            `${frontendURL}/auth/callback?success=true&token=${token}`
-          );
-        }
+      const sessionData = await app.betterAuth.api.getSession({
+        headers: new Headers({
+          authorization: `Bearer ${sessionToken}`,
+          cookie: `better-auth.session_token=${sessionToken}`,
+        }),
+      });
+      console.log(`Dados da sessão: ${JSON.stringify(sessionData)}`);
+      // Verifica se o usuário está autenticado
+      console.log('Verificando se o usuário está autenticado');
+      if (sessionData?.user) {
+        const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
+        return reply.redirect(
+          `${frontendURL}/auth/callback?success=true&token=${sessionToken}`
+        );
       }
+
       const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
       app.log.warn('Sessão inválida ou não encontrada');
       return reply.redirect(
