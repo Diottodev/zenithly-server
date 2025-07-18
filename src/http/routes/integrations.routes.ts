@@ -161,13 +161,11 @@ export function integrationsRoutes(app: FastifyInstance) {
           expires_in: number;
         };
         const expiresAt = new Date(Date.now() + tokens.expires_in * 1000);
-        // Salvar tokens no banco
         const existingIntegration = await db
           .select()
           .from(schema.userIntegrations)
           .where(eq(schema.userIntegrations.userId, userId))
           .limit(1);
-
         if (existingIntegration.length === 0) {
           await db.insert(schema.userIntegrations).values({
             id: `integration_${userId}_${Date.now()}`,
@@ -200,6 +198,7 @@ export function integrationsRoutes(app: FastifyInstance) {
         return reply.send({
           success: true,
           message: 'Integração com Google configurada com sucesso',
+          accessToken: tokens.access_token,
         });
       } catch {
         return reply.status(500).send({ error: 'Erro interno do servidor' });
@@ -296,6 +295,7 @@ export function integrationsRoutes(app: FastifyInstance) {
         return reply.send({
           success: true,
           message: 'Integração com Outlook configurada com sucesso',
+          accessToken: tokens.access_token,
         });
       } catch {
         return reply.status(500).send({ error: 'Erro interno do servidor' });
