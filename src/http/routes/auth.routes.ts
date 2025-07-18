@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { extractSessionToken } from '@/utils/extract-session-token.ts';
 import { env } from '../../env.ts';
+import { extractSessionToken } from '../../utils/extract-session-token.ts';
 import { handleAuthError } from '../handlers/handle-error-auth.ts';
 import {
   createUserSchema,
