@@ -230,9 +230,9 @@ export function authRoutes(app: FastifyInstance) {
       if (token) {
         const sessionData = await app.betterAuth.api.getSession({
           headers: new Headers({
-            authorization: `Bearer ${token}`,
+            cookie: `better-auth.session_token=${token}`,
           }),
-        });
+        }); 
         if (sessionData?.user) {
           const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
           return reply.redirect(
