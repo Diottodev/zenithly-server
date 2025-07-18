@@ -185,10 +185,7 @@ export function authRoutes(app: FastifyInstance) {
           message: 'Não foi possível iniciar login com GitHub',
         });
       }
-      return reply.code(200).send({
-        url: githubResult.url,
-        provider: 'github',
-      });
+      return reply.redirect(githubResult.url);
     } catch (error) {
       app.log.error(error, 'Erro no login GitHub');
       return reply.code(500).send({
@@ -213,10 +210,7 @@ export function authRoutes(app: FastifyInstance) {
           message: 'Não foi possível iniciar login com Google',
         });
       }
-      return reply.code(200).send({
-        url: googleResult.url,
-        provider: 'google',
-      });
+      return reply.redirect(googleResult.url);
     } catch (error) {
       app.log.error(error, 'Erro no login Google');
       return reply.code(500).send({
@@ -232,7 +226,6 @@ export function authRoutes(app: FastifyInstance) {
       const sessionToken = extractSessionToken({
         cookie: request.headers.cookie,
       });
-
       if (!sessionToken) {
         return reply.code(400).send({
           error: 'Token não fornecido',
