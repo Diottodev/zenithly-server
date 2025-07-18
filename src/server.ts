@@ -13,7 +13,7 @@ import betterAuthPlugin from './plugins/better-auth.plugin.ts';
 dotenv.config();
 
 export function createApp() {
-  const app = fastify();
+  const app = fastify({ logger: true });
   app.register(fastifyCors, {
     origin: [env.FRONTEND_URL || 'http://localhost:3000'],
     credentials: true,
