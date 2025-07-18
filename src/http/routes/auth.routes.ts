@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noConsole: any */
+
+import crypto from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { env } from '../../env.ts';
 import { extractSessionToken } from '../../utils/extract-session-token.ts';
