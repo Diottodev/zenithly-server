@@ -248,7 +248,7 @@ describe('Auth Routes', () => {
         method: 'GET',
         url: '/auth/session',
         headers: {
-          cookie: 'better-auth.session_token=mock-token',
+          authorization: 'Bearer mock-token',
         },
       });
       expect(response.statusCode).toBe(200);
