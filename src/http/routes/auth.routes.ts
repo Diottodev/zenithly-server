@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: any */
 import type { FastifyInstance } from 'fastify';
 import { env } from '../../env.ts';
 import { extractSessionToken } from '../../utils/extract-session-token.ts';
@@ -236,6 +237,8 @@ export function authRoutes(app: FastifyInstance) {
   }>('/auth/callback', async (request, reply) => {
     try {
       const token = request.query.token;
+      console.log(request.query);
+      console.log(`Token recebido no callback: ${token}`);
       if (!token) {
         return reply.code(400).send({
           error: 'Token não fornecido',
@@ -249,9 +252,9 @@ export function authRoutes(app: FastifyInstance) {
             cookie: `better-auth.session_token=${token}`,
           }),
         });
-        app.log.info(`Dados da sessão: ${JSON.stringify(sessionData)}`);
+        console.log(`Dados da sessão: ${JSON.stringify(sessionData)}`);
         // Verifica se o usuário está autenticado
-        app.log.info('Verificando se o usuário está autenticado');
+        console.log('Verificando se o usuário está autenticado');
         if (sessionData?.user) {
           const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
           return reply.redirect(
