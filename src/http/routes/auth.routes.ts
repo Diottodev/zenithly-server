@@ -153,12 +153,13 @@ export function authRoutes(app: FastifyInstance) {
   );
 
   // GET /auth/github - GitHub OAuth login
-  app.get('/auth/github', async (_request, reply) => {
+  app.get('/auth/github', async (request, reply) => {
     try {
+      const token = request.headers.authorization?.replace('Bearer ', '');
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
-          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback`,
+          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token}`,
         },
       });
       if (!githubResult?.url) {
@@ -181,12 +182,13 @@ export function authRoutes(app: FastifyInstance) {
   });
 
   // GET /auth/google - Google OAuth login
-  app.get('/auth/google', async (_request, reply) => {
+  app.get('/auth/google', async (request, reply) => {
     try {
+      const token = request.headers.authorization?.replace('Bearer ', '');
       const googleResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'google',
-          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback`,
+          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token}`,
         },
       });
       if (!googleResult?.url) {
