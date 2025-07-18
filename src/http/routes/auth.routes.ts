@@ -245,9 +245,13 @@ export function authRoutes(app: FastifyInstance) {
       if (token) {
         const sessionData = await app.betterAuth.api.getSession({
           headers: new Headers({
+            authorization: `Bearer ${token}`,
             cookie: `better-auth.session_token=${token}`,
           }),
         });
+        app.log.info(`Dados da sessão: ${JSON.stringify(sessionData)}`);
+        // Verifica se o usuário está autenticado
+        app.log.info('Verificando se o usuário está autenticado');
         if (sessionData?.user) {
           const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
           return reply.redirect(
@@ -256,6 +260,7 @@ export function authRoutes(app: FastifyInstance) {
         }
       }
       const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
+      app.log.warn('Sessão inválida ou não encontrada');
       return reply.redirect(
         `${frontendURL}/auth/callback?error=invalid_session`
       );
