@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { extractSessionToken } from '@/utils/extract-session-token.ts';
 import { env } from '../../env.ts';
 import { handleAuthError } from '../handlers/handle-error-auth.ts';
 import {
@@ -40,12 +39,6 @@ export function authRoutes(app: FastifyInstance) {
             error: 'Credenciais inválidas',
             message: 'Email ou senha incorretos',
           });
-        }
-        if (signInResult.token) {
-          reply.header(
-            'set-cookie',
-            `better-auth.session_token=${signInResult.token}; HttpOnly; Path=/; SameSite=Lax`
-          );
         }
         return reply.code(200).send({
           message: 'Login realizado com sucesso',
@@ -88,9 +81,10 @@ export function authRoutes(app: FastifyInstance) {
   // GET /auth/session - Verify current session using better-auth
   app.get('/auth/session', async (request, reply) => {
     try {
-      const sessionToken = extractSessionToken({
-        cookie: request.headers.cookie,
-      });
+      const sessionToken = request.headers.authorization?.replace(
+        'Bearer ',
+        ''
+      );
       if (!sessionToken) {
         return reply.code(401).send({
           error: 'Não autenticado',
@@ -99,7 +93,7 @@ export function authRoutes(app: FastifyInstance) {
       }
       const sessionData = await app.betterAuth.api.getSession({
         headers: new Headers({
-          cookie: `better-auth.session_token=${sessionToken}`,
+          authorization: `Bearer ${sessionToken}`,
         }),
       });
       if (!sessionData?.user) {
@@ -219,14 +213,17 @@ export function authRoutes(app: FastifyInstance) {
     Querystring: { token?: string };
   }>('/auth/callback', async (request, reply) => {
     try {
-      let token = request.query.token;
+      const token = request.query.token;
       if (!token) {
-        token = extractSessionToken({ cookie: request.headers.cookie });
+        return reply.code(400).send({
+          error: 'Token não fornecido',
+          message: 'Token de autenticação não encontrado',
+        });
       }
       if (token) {
         const sessionData = await app.betterAuth.api.getSession({
           headers: new Headers({
-            cookie: `better-auth.session_token=${token}`,
+            authorization: `Bearer ${token}`,
           }),
         });
         if (sessionData?.user) {
