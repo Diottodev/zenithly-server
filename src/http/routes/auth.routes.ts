@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { extractSessionToken } from '@/utils/extract-session-token.ts';
 import { env } from '../../env.ts';
 import { handleAuthError } from '../handlers/handle-error-auth.ts';
 import {
@@ -155,7 +156,9 @@ export function authRoutes(app: FastifyInstance) {
   // GET /auth/github - GitHub OAuth login
   app.get('/auth/github', async (request, reply) => {
     try {
-      const token = request.headers.authorization?.replace('Bearer ', '');
+      const token = extractSessionToken({
+        cookie: request.headers.cookie,
+      });
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
@@ -184,7 +187,9 @@ export function authRoutes(app: FastifyInstance) {
   // GET /auth/google - Google OAuth login
   app.get('/auth/google', async (request, reply) => {
     try {
-      const token = request.headers.authorization?.replace('Bearer ', '');
+      const token = extractSessionToken({
+        cookie: request.headers.cookie,
+      });
       const googleResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'google',
