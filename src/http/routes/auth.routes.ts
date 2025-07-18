@@ -158,7 +158,7 @@ export function authRoutes(app: FastifyInstance) {
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
-          callbackURL: 'http://localhost:8080/auth/callback',
+          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback`,
         },
       });
       if (!githubResult?.url) {
@@ -186,7 +186,7 @@ export function authRoutes(app: FastifyInstance) {
       const googleResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'google',
-          callbackURL: `http://localhost:8080'}/auth/callback`,
+          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback`,
         },
       });
       if (!googleResult?.url) {
