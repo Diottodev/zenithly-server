@@ -251,7 +251,7 @@ export function authRoutes(app: FastifyInstance) {
       if (sessionData?.user) {
         const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
         return reply.redirect(
-          `${frontendURL}/auth/callback?success=true&token=${sessionToken}`
+          `${frontendURL}/auth/callback?success=true&token=${sessionData.session.token}`
         );
       }
 
