@@ -1,5 +1,3 @@
-const SESSION_TOKEN_REGEX = /better-auth\.session_token=([^;]+)/;
-
 /**
  * Extracts the session token from a given cookie header string.
  *
@@ -19,7 +17,13 @@ export function extractSessionToken({
   if (!cookie) {
     return;
   }
-  const decodedCookie = decodeURIComponent(cookie);
-  const match = decodedCookie.match(SESSION_TOKEN_REGEX);
-  return match ? match[1] : undefined;
+  const cookies = cookie.split(';').reduce(
+    (acc, item) => {
+      const [key, value] = item.trim().split('=');
+      acc[key] = decodeURIComponent(value);
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+  return cookies['better-auth.session_token'];
 }
