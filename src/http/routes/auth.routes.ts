@@ -86,9 +86,9 @@ export function authRoutes(app: FastifyInstance) {
         'Bearer ',
         ''
       );
-      let token: string | undefined = undefined;
+      let token: string | undefined;
       if (!sessionToken) {
-         token = extractSessionToken({
+        token = extractSessionToken({
           cookie: request.headers.cookie,
         });
         if (!token) {
@@ -100,12 +100,16 @@ export function authRoutes(app: FastifyInstance) {
       }
       const sessionData = await app.betterAuth.api.getSession({
         headers: new Headers({
-          ...(sessionToken ? {
-            authorization: `Bearer ${sessionToken}`
-          } : {}),
-          ...(token ? {
-            cookie: `better-auth.session_token=${token}`
-          } : {}),
+          ...(sessionToken
+            ? {
+                authorization: `Bearer ${sessionToken}`,
+              }
+            : {}),
+          ...(token
+            ? {
+                cookie: `better-auth.session_token=${token}`,
+              }
+            : {}),
         }),
       });
       if (!sessionData?.user) {
@@ -243,7 +247,7 @@ export function authRoutes(app: FastifyInstance) {
           headers: new Headers({
             cookie: `better-auth.session_token=${token}`,
           }),
-        }); 
+        });
         if (sessionData?.user) {
           const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
           return reply.redirect(
