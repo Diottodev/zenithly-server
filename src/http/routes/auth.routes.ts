@@ -86,17 +86,17 @@ export function authRoutes(app: FastifyInstance) {
         'Bearer ',
         ''
       );
-      let token: string | undefined;
-      if (!sessionToken) {
-        token = extractSessionToken({
-          cookie: request.headers.cookie,
+      const sessionTokenFromCookie = extractSessionToken({
+        cookie: request.headers.cookie,
+      });
+      const token = sessionToken
+        ? sessionToken
+        : sessionTokenFromCookie || undefined;
+      if (!token) {
+        return reply.code(401).send({
+          error: 'Não autenticado',
+          message: 'Token de sessão não fornecido',
         });
-        if (!token) {
-          return reply.code(401).send({
-            error: 'Não autenticado',
-            message: 'Token de sessão não fornecido',
-          });
-        }
       }
       const sessionData = await app.betterAuth.api.getSession({
         headers: new Headers({
@@ -105,9 +105,9 @@ export function authRoutes(app: FastifyInstance) {
                 authorization: `Bearer ${sessionToken}`,
               }
             : {}),
-          ...(token
+          ...(sessionTokenFromCookie
             ? {
-                cookie: `better-auth.session_token=${token}`,
+                cookie: `better-auth.session_token=${sessionTokenFromCookie}`,
               }
             : {}),
         }),
