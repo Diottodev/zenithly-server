@@ -175,13 +175,14 @@ export function authRoutes(app: FastifyInstance) {
       const token = extractSessionToken({
         cookie: request.headers.cookie,
       });
-      console.log(`Token recebido no GitHub: ${token}`);
-      console.log(`REQUEST HEADERS: ${JSON.stringify(request.headers)}`);
-
+      let githubToken: string | undefined = token;
+      if (!token) {
+        githubToken = crypto.randomUUID(); // Generate a new token if not present
+      }
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
-          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token}`,
+          callbackURL: `${env.BETTER_AUTH_URL}/auth/callback?token=${token || githubToken}`,
         },
       });
       if (!githubResult?.url) {
