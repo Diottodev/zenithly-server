@@ -1,1 +1,1 @@
-feat: translate documentation to portuguese
+fix: serve documentation from /docs endpoint and correct static file path
