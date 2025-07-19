@@ -1,1 +1,0 @@
-fix: serve documentation from /docs endpoint and correct static file path
