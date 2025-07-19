@@ -1,1 +1,1 @@
-feat: add HOST environment variable for server configuration
+fix: configure vitest to resolve path aliases
