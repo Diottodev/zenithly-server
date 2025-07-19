@@ -1,16 +1,17 @@
 import { log } from 'node:console';
 import { fastifyCors } from '@fastify/cors';
 import { fastifyJwt } from '@fastify/jwt';
-import dotenv from 'dotenv';
 import { fastify } from 'fastify';
 import * as v from 'valibot';
 import { env } from './env.ts';
-import { authRoutes } from './http/routes/auth.routes.ts';
-import { integrationsRoutes } from './http/routes/integrations.routes.ts';
-import { userRoutes } from './http/routes/user.routes.ts';
+import { authRoutes } from './http/routes/auth.ts';
+import { gmailRoutes } from './http/routes/gmail.ts';
+import { googleCalendarRoutes } from './http/routes/google-calendar.ts';
+import { integrationsRoutes } from './http/routes/integrations.ts';
+import { outlookRoutes } from './http/routes/outlook.ts';
+import { outlookCalendarRoutes } from './http/routes/outlook-calendar.ts';
+import { userRoutes } from './http/routes/user.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
-
-dotenv.config();
 
 export function createApp() {
   const app = fastify({ logger: true });
@@ -103,10 +104,6 @@ export function createApp() {
       message: error.message || 'Algo deu errado',
     });
   });
-  app.register(userRoutes);
-  app.register(authRoutes);
-  app.register(integrationsRoutes);
-
   // Health check endpoint
   app.get('/health', async () => {
     const healthCheck: {
@@ -127,7 +124,6 @@ export function createApp() {
       environment: env.NODE_ENV,
       version: process.version,
     };
-
     try {
       // Test database connection
       const { db } = await import('./db/connection.ts');
@@ -137,18 +133,23 @@ export function createApp() {
       healthCheck.database = 'disconnected';
       healthCheck.status = 'ERROR';
     }
-
     return healthCheck;
   });
+  app.register(gmailRoutes);
+  app.register(googleCalendarRoutes);
+  app.register(outlookRoutes);
+  app.register(outlookCalendarRoutes);
+  app.register(userRoutes);
+  app.register(authRoutes);
+  app.register(integrationsRoutes);
   return app;
 }
-
 // Starting server
 const app = createApp();
-app.listen({ port: env.PORT, host: '0.0.0.0' }, (err) => {
+app.listen({ port: env.PORT, host: env.HOST }, (err) => {
   if (err) {
     log(err, 'Server failed to start');
     process.exit(1);
   }
-  log(`Server is running at http://0.0.0.0:${env.PORT}`);
+  log(`Server is running at http://${env.HOST}:${env.PORT}`);
 });

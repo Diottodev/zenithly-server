@@ -225,19 +225,19 @@ Content-Type: application/json
 
 ### Get Google Calendar events
 # @name getGoogleCalendarEvents
-GET {{baseUrl}}/integrations/google/calendar/events/{{userId}}
+GET {{baseUrl}}/google/calendar/events/{{userId}}
 
 ### Get Gmail messages
 # @name getGmailMessages
-GET {{baseUrl}}/integrations/google/gmail/messages/{{userId}}
+GET {{baseUrl}}/google/gmail/messages/{{userId}}
 
 ### Get Outlook Calendar events
 # @name getOutlookCalendarEvents
-GET {{baseUrl}}/integrations/outlook/calendar/events/{{userId}}
+GET {{baseUrl}}/outlook/calendar/events/{{userId}}
 
 ### Get Outlook Mail messages
 # @name getOutlookMailMessages
-GET {{baseUrl}}/integrations/outlook/mail/messages/{{userId}}
+GET {{baseUrl}}/outlook/mail/messages/{{userId}}
 
 ### === INTEGRATION ERROR SCENARIOS ===
 
