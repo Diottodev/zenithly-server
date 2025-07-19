@@ -15,8 +15,18 @@
     "test:coverage": "vitest run --coverage",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "lint": "biome check",
+    "format": "biome format --write",
+    "precommit": "lefthook run precommit",
+    "deploy": "bash scripts/deploy.sh",
+    "monitor": "bash scripts/monitor.sh",
+    "setup-server": "bash scripts/setup-server.sh"
   },
+  "keywords": [],
+  "author": "DiottoDev",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.3",
   "dependencies": {
     "@fastify/cors": "^11.0.1",
     "@fastify/jwt": "^9.1.0",

@@ -10,7 +10,10 @@ export default defineConfig({
       { text: 'Deployment', link: '/DEPLOYMENT' },
       { text: 'Guia OAuth Frontend', link: '/FRONTEND_OAUTH_GUIDE' },
       { text: 'Integrações', link: '/INTEGRATIONS' },
-      { text: 'Resumo da Implementação OAuth', link: '/OAUTH_IMPLEMENTATION_SUMMARY' },
+      {
+        text: 'Resumo da Implementação OAuth',
+        link: '/OAUTH_IMPLEMENTATION_SUMMARY',
+      },
       { text: 'Instruções de Setup', link: '/SETUP-INSTRUCTIONS' },
       { text: 'Testes', link: '/TESTS_README' },
     ],
@@ -21,7 +24,10 @@ export default defineConfig({
           { text: 'Deployment', link: '/DEPLOYMENT' },
           { text: 'Guia OAuth Frontend', link: '/FRONTEND_OAUTH_GUIDE' },
           { text: 'Integrações', link: '/INTEGRATIONS' },
-          { text: 'Resumo da Implementação OAuth', link: '/OAUTH_IMPLEMENTATION_SUMMARY' },
+          {
+            text: 'Resumo da Implementação OAuth',
+            link: '/OAUTH_IMPLEMENTATION_SUMMARY',
+          },
           { text: 'Instruções de Setup', link: '/SETUP-INSTRUCTIONS' },
           { text: 'Testes', link: '/TESTS_README' },
         ],

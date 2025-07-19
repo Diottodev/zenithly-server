@@ -1,9 +1,9 @@
-import { fastifyStatic } from '@fastify/static';
 import { log } from 'node:console';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fastifyCors } from '@fastify/cors';
 import { fastifyJwt } from '@fastify/jwt';
+import { fastifyStatic } from '@fastify/static';
 import { fastify } from 'fastify';
 import * as v from 'valibot';
 import { env } from './env.ts';
