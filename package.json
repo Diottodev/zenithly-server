@@ -13,20 +13,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "biome check",
-    "format": "biome format --write",
-    "precommit": "lefthook run precommit",
-    "deploy": "bash scripts/deploy.sh",
-    "monitor": "bash scripts/monitor.sh",
-    "setup-server": "bash scripts/setup-server.sh"
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
-  "keywords": [],
-  "author": "DiottoDev",
-  "license": "ISC",
-  "packageManager": "pnpm@10.12.3",
   "dependencies": {
     "@fastify/cors": "^11.0.1",
     "@fastify/jwt": "^9.1.0",
+    "@fastify/static": "^8.2.0",
     "@types/bcryptjs": "^3.0.0",
     "bcryptjs": "^3.0.2",
     "better-auth": "^1.2.12",
@@ -52,6 +46,7 @@
     "tsx": "^4.20.3",
     "ultracite": "5.0.33",
     "vite-tsconfig-paths": "^5.1.4",
+    "vitepress": "^1.6.3",
     "vitest": "^3.2.4"
   },
   "lint-staged": {

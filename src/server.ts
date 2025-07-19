@@ -1,4 +1,7 @@
+import { fastifyStatic } from '@fastify/static';
 import { log } from 'node:console';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { fastifyCors } from '@fastify/cors';
 import { fastifyJwt } from '@fastify/jwt';
 import { fastify } from 'fastify';
@@ -13,8 +16,14 @@ import { outlookCalendarRoutes } from './http/routes/outlook-calendar.ts';
 import { userRoutes } from './http/routes/user.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export function createApp() {
   const app = fastify({ logger: true });
+  app.register(fastifyStatic, {
+    root: path.join(__dirname, '..', 'public'),
+  });
   app.register(fastifyCors, {
     origin: [env.FRONTEND_URL || 'http://localhost:3000'],
     credentials: true,
@@ -66,10 +75,9 @@ export function createApp() {
     app.log.error(error, 'Request error');
     // Helper function to handle validation issues
     const handleValidationIssues = (issues: v.BaseIssue<unknown>[]) => {
-      const firstIssue = issues[0];
       return reply.code(400).send({
         error: 'Dados inválidos',
-        message: firstIssue?.message || 'Dados fornecidos são inválidos',
+        message: issues[0]?.message || 'Dados fornecidos são inválidos',
         details: issues.map((issue) => ({
           field: issue.path?.[0]?.key || 'unknown',
           message: issue.message,

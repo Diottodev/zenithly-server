@@ -68,7 +68,10 @@ deploy_full() {
     run_remote "cd zenithly-server || cd /var/www/zenithly-server"
     run_remote "git pull origin master"
     run_remote "pnpm install --frozen-lockfile"
+    run_remote "pnpm docs:build"
     run_remote "pnpm db:migrate"
+    run_remote "mkdir -p public/docs"
+    run_remote "cp -r docs/.vitepress/dist/* public/docs"
     run_remote "pm2 restart zenithly-server || pm2 start ecosystem.config.js"
 }
 
