@@ -102,13 +102,13 @@ export function authRoutes(app: FastifyInstance) {
         headers: new Headers({
           ...(sessionToken
             ? {
-              authorization: `Bearer ${sessionToken}`,
-            }
+                authorization: `Bearer ${sessionToken}`,
+              }
             : {}),
           ...(sessionTokenFromCookie
             ? {
-              cookie: `better-auth.session_token=${sessionTokenFromCookie}`,
-            }
+                cookie: `better-auth.session_token=${sessionTokenFromCookie}`,
+              }
             : {}),
         }),
       });
