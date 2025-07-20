@@ -112,6 +112,15 @@ export function createApp() {
       message: error.message || 'Algo deu errado',
     });
   });
+  app.get('/', () => {
+    return {
+      message: 'Welcome to Zenithly Server',
+      version: process.env.npm_package_version || 'unknown',
+      environment: env.NODE_ENV || 'development',
+      documentation: 'https://api.zenithly.com/docs',
+      frontend: env.FRONTEND_URL || 'http://localhost:3000',
+    };
+  });
   // Health check endpoint
   app.get('/health', async () => {
     const healthCheck: {
