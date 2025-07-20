@@ -53,7 +53,7 @@ module.exports = {
     {
       name: 'zenithly-docs',
       script: 'npx',
-      args: 'vitepress serve docs',
+      args: 'vitepress serve docs --port 5050',
       exec_mode: 'fork',
       instances: 1,
       interpreter: 'none',
