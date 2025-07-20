@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts ",
-    "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
+    "start": "--env-file .env --experimental-strip-types --no-warnings src/server.ts",
     "db:seed": "node --env-file .env --experimental-strip-types --no-warnings src/db/seed.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -16,7 +16,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "docs:start": "vitepress serve docs",
+    "docs:start": "vitepress serve docs --port 5050",
     "lint": "biome check",
     "format": "biome format --write",
     "precommit": "lefthook run precommit",

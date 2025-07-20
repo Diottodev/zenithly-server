@@ -82,6 +82,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build Docs
+        run: npx vitepress build docs
+
       - name: Build application
         run: pnpm build || echo "No build script found, skipping build step"
 
