@@ -26,8 +26,8 @@ export function extractSessionToken({
     {} as Record<string, string>
   );
   return (
-    cookies['better-auth.session_token'] ||
     cookies['__Secure-better-auth.session_token'] ||
+    cookies['better-auth.session_token'] ||
     undefined
   );
 }

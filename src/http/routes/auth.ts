@@ -102,13 +102,13 @@ export function authRoutes(app: FastifyInstance) {
         headers: new Headers({
           ...(sessionToken
             ? {
-                authorization: `Bearer ${sessionToken}`,
-              }
+              authorization: `Bearer ${sessionToken}`,
+            }
             : {}),
           ...(sessionTokenFromCookie
             ? {
-                cookie: `better-auth.session_token=${sessionTokenFromCookie}`,
-              }
+              cookie: `better-auth.session_token=${sessionTokenFromCookie}`,
+            }
             : {}),
         }),
       });
@@ -238,6 +238,7 @@ export function authRoutes(app: FastifyInstance) {
       }
       const sessionData = await app.betterAuth.api.getSession({
         headers: new Headers({
+          authorization: `Bearer ${sessionToken}`,
           cookie: `better-auth.session_token=${sessionToken}`,
         }),
       });
