@@ -4,6 +4,7 @@ export default defineConfig({
   title: 'Zenithly Server',
   description: 'Documentação do Servidor Zenithly',
   lang: 'pt-BR',
+  base: '/docs/',
   themeConfig: {
     nav: [
       { text: 'Início', link: '/' },
