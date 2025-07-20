@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noConsole: any */
-
 import type { FastifyInstance } from 'fastify';
 import { env } from '../../env.ts';
 import { extractSessionToken } from '../../utils/extract-session-token.ts';
@@ -232,7 +230,6 @@ export function authRoutes(app: FastifyInstance) {
       const sessionToken = extractSessionToken({
         cookie: request.headers.cookie,
       });
-
       if (!sessionToken) {
         return reply.code(400).send({
           error: 'Token não fornecido',
@@ -241,32 +238,10 @@ export function authRoutes(app: FastifyInstance) {
       }
       const sessionData = await app.betterAuth.api.getSession({
         headers: new Headers({
-          authorization: `Bearer ${sessionToken}`,
           cookie: `better-auth.session_token=${sessionToken}`,
         }),
       });
       const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
-      if (!sessionData) {
-        const data = await app.betterAuth.api.getSession({
-          headers: new Headers({
-            authorization: `Bearer ${sessionToken}`,
-            cookie: `__Secure-better-auth.session_token=${sessionToken}`,
-          }),
-        });
-        if (data?.user) {
-          return reply.redirect(
-            `${frontendURL}/auth/callback?success=true&token=${data.session.token}`
-          );
-        }
-        app.log.warn('Sessão inválida ou não encontrada');
-        return reply.redirect(
-          `${frontendURL}/auth/callback?error=invalid_session`
-        );
-      }
-      console.log(`Token: ${JSON.stringify(sessionToken)}`);
-      console.log(`Dados da sessão: ${JSON.stringify(sessionData)}`);
-      // Verifica se o usuário está autenticado
-      console.log('Verificando se o usuário está autenticado');
       if (sessionData?.user) {
         return reply.redirect(
           `${frontendURL}/auth/callback?success=true&token=${sessionData.session.token}`

@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
-import { db } from '@/db/connection.ts';
-import { schema } from '@/db/drizzle/index.ts';
+import { db } from '../../db/connection.ts';
+import { schema } from '../../db/drizzle/index.ts';
 import { userParamsSchema } from '../schemas/user-routes.schema.ts';
 
 export function outlookRoutes(app: FastifyInstance) {
