@@ -48,7 +48,7 @@ module.exports = {
         FRONTEND_URL: process.env.FRONTEND_URL,
         CORS_ORIGIN: process.env.CORS_ORIGIN,
         API_URL: process.env.API_URL || 'http://localhost:8080',
-      }
+      },
     },
     {
       name: 'zenithly-docs',
