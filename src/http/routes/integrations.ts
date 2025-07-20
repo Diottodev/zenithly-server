@@ -357,8 +357,8 @@ export function integrationsRoutes(app: FastifyInstance) {
     }
   );
 
-  // POST /integrations/google/refresh - Refresh token do Google
-  app.post<{
+  // GET /integrations/google/refresh - Refresh token do Google
+  app.get<{
     Params: UserParams;
   }>(
     '/integrations/google/refresh/:id',
@@ -499,8 +499,8 @@ export function integrationsRoutes(app: FastifyInstance) {
     }
   );
 
-  // POST /integrations/outlook/refresh - Refresh token do Outlook
-  app.post<{
+  // GET /integrations/outlook/refresh - Refresh token do Outlook
+  app.get<{
     Params: UserParams;
   }>(
     '/integrations/outlook/refresh/:id',
