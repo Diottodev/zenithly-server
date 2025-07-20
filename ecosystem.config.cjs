@@ -48,6 +48,23 @@ module.exports = {
         FRONTEND_URL: process.env.FRONTEND_URL,
         CORS_ORIGIN: process.env.CORS_ORIGIN,
         API_URL: process.env.API_URL || 'http://localhost:8080',
+      }
+    },
+    {
+      name: 'zenithly-docs',
+      script: 'npx',
+      args: 'vitepress serve docs',
+      exec_mode: 'fork',
+      instances: 1,
+      interpreter: 'none',
+      watch: false,
+      env: {
+        NODE_ENV: process.env.NODE_ENV || 'production',
+        DOCS_PORT: process.env.DOCS_PORT || 5050,
+      },
+      env_production: {
+        NODE_ENV: process.env.NODE_ENV || 'production',
+        DOCS_PORT: process.env.DOCS_PORT || 5050,
       },
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       error_file: './logs/pm2-error.log',
@@ -58,15 +75,6 @@ module.exports = {
       max_restarts: 10,
       min_uptime: '10s',
       restart_delay: 4000,
-      // Health check
-      health_check_grace_period: 3000,
-      health_check_fatal_exceptions: true,
-      // Monitoring
-      pmx: true,
-      // Advanced PM2 features
-      kill_timeout: 5000,
-      listen_timeout: 8000,
-      // Environment variables for the app
       env_file: '.env',
     },
   ],
@@ -80,7 +88,7 @@ module.exports = {
       path: 'zenithly-server',
       'pre-deploy-local': '',
       'post-deploy':
-        'pnpm install --frozen-lockfile && pnpm db:migrate && pm2 reload ecosystem.config.js --env production',
+        'pnpm install --frozen-lockfile && pnpm db:migrate && pnpm docs:build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': '',
     },
   },
