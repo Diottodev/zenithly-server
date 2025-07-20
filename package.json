@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --env-file .env --experimental-strip-types --no-warnings --watch src/server.ts ",
-    "start": "--env-file .env --experimental-strip-types --no-warnings src/server.ts",
+    "start": "node --env-file .env --experimental-strip-types --no-warnings src/server.ts",
     "db:seed": "node --env-file .env --experimental-strip-types --no-warnings src/db/seed.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -41,6 +41,7 @@
     "fastify-plugin": "^5.0.1",
     "nanoid": "^5.1.5",
     "pg": "^8.16.3",
+    "pm2": "^6.0.8",
     "postgres": "^3.4.7",
     "valibot": "^1.1.0"
   },
