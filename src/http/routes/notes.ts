@@ -2,11 +2,10 @@ import { and, eq } from 'drizzle-orm';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { notes } from '../../db/drizzle/notes.ts';
+import type { TRouteParams, TUpdateNote } from '../schemas/index.ts';
 import {
-  type CreateNoteBody,
   createNoteSchema,
-  type NoteParams,
-  type UpdateNoteBody,
+  type TCreateNote,
   updateNoteSchema,
 } from '../schemas/notes.ts';
 
@@ -19,7 +18,7 @@ export function noteRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { title, content } = request.body as CreateNoteBody;
+      const { title, content } = request.body as TCreateNote;
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
       const value = {
@@ -55,7 +54,7 @@ export function noteRoutes(app: FastifyInstance) {
   app.get('/get/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
-    const { id } = request.params as NoteParams;
+    const { id } = request.params as TRouteParams;
     try {
       const [note] = await db
         .select()
@@ -82,8 +81,8 @@ export function noteRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
-      const { id } = request.params as NoteParams;
-      const { title, content } = request.body as UpdateNoteBody;
+      const { id } = request.params as TRouteParams;
+      const { title, content } = request.body as TUpdateNote;
       try {
         const [updatedNote] = await db
           .update(notes)
@@ -103,7 +102,7 @@ export function noteRoutes(app: FastifyInstance) {
   app.delete('/delete/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
-    const { id } = request.params as NoteParams;
+    const { id } = request.params as TRouteParams;
     try {
       const [deletedNote] = await db
         .delete(notes)
