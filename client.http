@@ -1,6 +1,7 @@
 ### Zenithly Server API Tests
 ### Base URL
-@baseUrl = http://localhost:8080
+@baseUrl = http://localhost:8080/v1/api
+
 @authToken = {{authLogin.response.body.$.token}}
 
 @userId = {{authLogin.response.body.$.user.id}}
@@ -57,25 +58,13 @@ GET {{baseUrl}}/auth/google
 
 ### === USER ROUTES ===
 
-### Get all users with pagination
-# @name getAllUsers
-GET {{baseUrl}}/users?page=1&limit=10
-
-### Get all users with search
-# @name getUsersWithSearch
-GET {{baseUrl}}/users?search=john&page=1&limit=4
-
-### Get all users filtered by role
-# @name getUsersByRole
-GET {{baseUrl}}/users?role=user&page=1&limit=10
-
 ### Get user by ID
 # @name getUserById
-GET {{baseUrl}}/users/{{userId}}
+GET {{baseUrl}}/user/{{userId}}
 
 ### Update user by ID
 # @name updateUser
-PUT {{baseUrl}}/users/{{userId}}
+PUT {{baseUrl}}/user/{{userId}}
 Content-Type: application/json
 
 {
@@ -86,239 +75,429 @@ Content-Type: application/json
 
 ### Delete user by ID
 # @name deleteUser
-DELETE {{baseUrl}}/users/{{userId}}
+DELETE {{baseUrl}}/user/{{userId}}
 
-### === EXAMPLES WITH DIFFERENT SCENARIOS ===
+### === NOTES ROUTES ===
 
-### Test invalid email format (should return 400)
-# @name authRegisterInvalidEmail
-POST {{baseUrl}}/auth/register
+### Create a new note
+# @name createNote
+POST {{baseUrl}}/notes/create
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "name": "Test User",
-  "email": "invalid-email",
-  "password": "password123"
+  "title": "My First Note",
+  "content": "This is the content of my first note."
 }
 
-### Test short password (should return 400)
-# @name authRegisterShortPassword
-POST {{baseUrl}}/auth/register
+### Get all notes
+# @name getAllNotes
+GET {{baseUrl}}/notes/list
+Authorization: Bearer {{authToken}}
+
+### Get note by ID
+# @name getNoteById
+GET {{baseUrl}}/notes/get/{{createNote.response.body.$.id}}
+Authorization: Bearer {{authToken}}
+
+### Update note by ID
+# @name updateNote
+PUT {{baseUrl}}/notes/update/{{createNote.response.body.$.id}}
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "name": "Test User",
-  "email": "test@example.com",
-  "password": "123"
+  "title": "Updated Note Title"
 }
 
-### Test login with wrong credentials (should return 401)
-# @name authLoginWrongCredentials
-POST {{baseUrl}}/auth/login
+### Delete note by ID
+# @name deleteNote
+DELETE {{baseUrl}}/notes/delete/{{createNote.response.body.$.id}}
+Authorization: Bearer {{authToken}}
+
+### === TASKS ROUTES ===
+
+### Create a new task
+# @name createTask
+POST {{baseUrl}}/tasks/create
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "email": "nonexistent@example.com",
-  "password": "wrongpassword"
+  "title": "My First Task",
+  "description": "This is the description of my first task."
 }
 
-### Test get session without token (should return 401)
-# @name authSessionWithoutToken
-GET {{baseUrl}}/auth/session
+### Get all tasks
+# @name getAllTasks
+GET {{baseUrl}}/tasks/list
+Authorization: Bearer {{authToken}}
 
-### Test get non-existent user (should return 404)
-# @name getNonExistentUser
-GET {{baseUrl}}/users/999
+### Get task by ID
+# @name getTaskById
+GET {{baseUrl}}/tasks/get/{{createTask.response.body.$.id}}
+Authorization: Bearer {{authToken}}
 
-### Test create user with duplicate email (should return 409)
-# @name createDuplicateUser
-POST {{baseUrl}}/auth/register
+### Update task by ID
+# @name updateTask
+PUT {{baseUrl}}/tasks/update/{{createTask.response.body.$.id}}
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "name": "Duplicate User",
-  "email": "john@example.com",
-  "password": "password123",
-  "role": "user"
+  "title": "Updated Task Title",
+  "status": "in_progress"
 }
 
-### Test update non-existent user (should return 404)
-# @name updateNonExistentUser
-PUT {{baseUrl}}/users/999
+### Delete task by ID
+# @name deleteTask
+DELETE {{baseUrl}}/tasks/delete/{{createTask.response.body.$.id}}
+Authorization: Bearer {{authToken}}
+
+### === PASSWORDS ROUTES ===
+
+### Create a new password entry
+# @name createPassword
+POST {{baseUrl}}/passwords/create
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "name": "Updated Name"
+  "service": "Facebook",
+  "username": "myemail@example.com",
+  "password": "myfacebookpassword"
 }
 
-### Test delete non-existent user (should return 404)
-# @name deleteNonExistentUser
-DELETE {{baseUrl}}/users/999
+### Get all password entries
+# @name getAllPasswords
+GET {{baseUrl}}/passwords/list
+Authorization: Bearer {{authToken}}
 
-### === BULK OPERATIONS ===
+### Get password entry by ID
+# @name getPasswordById
+GET {{baseUrl}}/passwords/get/{{createPassword.response.body.$.id}}
+Authorization: Bearer {{authToken}}
 
-### Create multiple users for testing
-# @name createMultipleUsers
-POST {{baseUrl}}/auth/register
+### Update password entry by ID
+# @name updatePassword
+PUT {{baseUrl}}/passwords/update/{{createPassword.response.body.$.id}}
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "name": "Admin User",
-  "email": "admin@example.com",
-  "password": "admin123",
-  "role": "admin"
+  "password": "mynewfacebookpassword"
 }
 
-###
-POST {{baseUrl}}/auth/register
-Content-Type: application/json
+### Delete password entry by ID
+# @name deletePassword
+DELETE {{baseUrl}}/passwords/delete/{{createPassword.response.body.$.id}}
+Authorization: Bearer {{authToken}}
 
-{
-  "name": "Regular User",
-  "email": "user@example.com", 
-  "password": "user122223",
-  "role": "user"
-}
+# ### === GOOGLE CALENDAR ROUTES ===
 
-###
-POST {{baseUrl}}/auth/register
-Content-Type: application/json
+# ### List Google Calendar events
+# # @name listGoogleCalendarEvents
+# GET {{baseUrl}}/google/calendar/events/list
+# Authorization: Bearer {{authToken}}
 
-{
-  "name": "Moderator User",
-  "email": "mod@example.com",
-  "password": "mod123222",
-  "role": "moderator"
-}
+# ### Create a Google Calendar event
+# # @name createGoogleCalendarEvent
+# POST {{baseUrl}}/google/calendar/events/create
+# Content-Type: application/json
+# Authorization: Bearer {{authToken}}
+
+# {
+#   "summary": "Team Meeting",
+#   "description": "Discuss Q3 strategy.",
+#   "start": {
+#     "dateTime": "2025-07-25T09:00:00-03:00",
+#     "timeZone": "America/Sao_Paulo"
+#   },
+#   "end": {
+#     "dateTime": "2025-07-25T10:00:00-03:00",
+#     "timeZone": "America/Sao_Paulo"
+#   },
+#   "attendees": [
+#     { "email": "attendee1@example.com" },
+#     { "email": "attendee2@example.com" }
+#   ]
+# }
+
+# ### Update a Google Calendar event
+# # @name updateGoogleCalendarEvent
+# PUT {{baseUrl}}/google/calendar/events/{{createGoogleCalendarEvent.response.body.$.id}}
+# Content-Type: application/json
+# Authorization: Bearer {{authToken}}
+
+# {
+#   "summary": "Updated Team Meeting"
+# }
+
+# ### Delete a Google Calendar event
+# # @name deleteGoogleCalendarEvent
+# DELETE {{baseUrl}}/google/calendar/events/{{createGoogleCalendarEvent.response.body.$.id}}
+# Authorization: Bearer {{authToken}}
+
+# ### List Google Calendars and their colors
+# # @name listGoogleCalendarsAndColors
+# GET {{baseUrl}}/google/calendar/calendars
+# Authorization: Bearer {{authToken}}
+
+# ### === GMAIL ROUTES ===
+
+# ### List Gmail messages
+# # @name listGmailMessages
+# GET {{baseUrl}}/gmail/messages
+# Authorization: Bearer {{authToken}}
+
+# ### Get a single Gmail message by ID
+# # @name getGmailMessageById
+# GET {{baseUrl}}/gmail/messages/{{listGmailMessages.response.body.$[0].id}}
+# Authorization: Bearer {{authToken}}
+
+# ### Send an email via Gmail
+# # @name sendGmail
+# POST {{baseUrl}}/gmail/send
+# Content-Type: application/json
+# Authorization: Bearer {{authToken}}
+
+# {
+#   "to": "test@example.com",
+#   "subject": "Test Email from API",
+#   "body": "This is a test email sent from the Zenithly API."
+# }
+
+# ### === EXAMPLES WITH DIFFERENT SCENARIOS ===
+
+# ### Test invalid email format (should return 400)
+# # @name authRegisterInvalidEmail
+# POST {{baseUrl}}/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Test User",
+#   "email": "invalid-email",
+#   "password": "password123"
+# }
+
+# ### Test short password (should return 400)
+# # @name authRegisterShortPassword
+# POST {{baseUrl}}/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Test User",
+#   "email": "test@example.com",
+#   "password": "123"
+# }
+
+# ### Test login with wrong credentials (should return 401)
+# # @name authLoginWrongCredentials
+# POST {{baseUrl}}/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "nonexistent@example.com",
+#   "password": "wrongpassword"
+# }
+
+# ### Test get session without token (should return 401)
+# # @name authSessionWithoutToken
+# GET {{baseUrl}}/auth/session
+
+# ### Test get non-existent user (should return 404)
+# # @name getNonExistentUser
+# GET {{baseUrl}}/users/999
+
+# ### Test create user with duplicate email (should return 409)
+# # @name createDuplicateUser
+# POST {{baseUrl}}/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Duplicate User",
+#   "email": "john@example.com",
+#   "password": "password123",
+#   "role": "user"
+# }
+
+# ### Test update non-existent user (should return 404)
+# # @name updateNonExistentUser
+# PUT {{baseUrl}}/users/999
+# Content-Type: application/json
+
+# {
+#   "name": "Updated Name"
+# }
+
+# ### Test delete non-existent user (should return 404)
+# # @name deleteNonExistentUser
+# DELETE {{baseUrl}}/users/999
+
+# ### === BULK OPERATIONS ===
+
+# ### Create multiple users for testing
+# # @name createMultipleUsers
+# POST {{baseUrl}}/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Admin User",
+#   "email": "admin@example.com",
+#   "password": "admin123",
+#   "role": "admin"
+# }
+
+# ###
+# POST {{baseUrl}}/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Regular User",
+#   "email": "user@example.com", 
+#   "password": "user122223",
+#   "role": "user"
+# }
+
+# ###
+# POST {{baseUrl}}/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Moderator User",
+#   "email": "mod@example.com",
+#   "password": "mod123222",
+#   "role": "moderator"
+# }
 
 
 
-### === INTEGRATIONS ROUTES - COMPREHENSIVE TESTS ===
+# ### === INTEGRATIONS ROUTES - COMPREHENSIVE TESTS ===
 
-### Get integrations status for user
-# @name getIntegrationsStatus
-GET {{baseUrl}}/integrations/status/{{userId}}
+# ### Get integrations status for user
+# # @name getIntegrationsStatus
+# GET {{baseUrl}}/integrations/status/{{userId}}
 
-### Get Google OAuth authorization URL
-# @name getGoogleAuthUrl
-GET {{baseUrl}}/integrations/google/auth-url/{{userId}}
+# ### Get Google OAuth authorization URL
+# # @name getGoogleAuthUrl
+# GET {{baseUrl}}/integrations/google/auth-url/{{userId}}
 
-### Google OAuth callback (example with dummy code)
-# @name googleOAuthCallback
-POST {{baseUrl}}/integrations/google/callback/{{userId}}
-Content-Type: application/json
+# ### Google OAuth callback (example with dummy code)
+# # @name googleOAuthCallback
+# POST {{baseUrl}}/integrations/google/callback/{{userId}}
+# Content-Type: application/json
 
-{
-  "code": "4/0AX4XfWh-dummy-authorization-code-example",
-  "state": "user_{{userId}}"
-}
+# {
+#   "code": "4/0AX4XfWh-dummy-authorization-code-example",
+#   "state": "user_{{userId}}"
+# }
 
-### Outlook OAuth callback (example with dummy code)
-# @name outlookOAuthCallback
-POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
-Content-Type: application/json
+# ### Outlook OAuth callback (example with dummy code)
+# # @name outlookOAuthCallback
+# POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
+# Content-Type: application/json
 
-{
-  "code": "M.R3_BAY.dummy-authorization-code-example",
-  "state": "user_{{userId}}"
-}
+# {
+#   "code": "M.R3_BAY.dummy-authorization-code-example",
+#   "state": "user_{{userId}}"
+# }
 
-### Get Google Calendar events
-# @name getGoogleCalendarEvents
-GET {{baseUrl}}/google/calendar/events/{{userId}}
+# ### Get Google Calendar events
+# # @name getGoogleCalendarEvents
+# GET {{baseUrl}}/google/calendar/events/{{userId}}
 
-### Get Gmail messages
-# @name getGmailMessages
-GET {{baseUrl}}/google/gmail/messages/{{userId}}
+# ### Get Gmail messages
+# # @name getGmailMessages
+# GET {{baseUrl}}/google/gmail/messages/{{userId}}
 
-### Get Outlook Calendar events
-# @name getOutlookCalendarEvents
-GET {{baseUrl}}/outlook/calendar/events/{{userId}}
+# ### Get Outlook Calendar events
+# # @name getOutlookCalendarEvents
+# GET {{baseUrl}}/outlook/calendar/events/{{userId}}
 
-### Get Outlook Mail messages
-# @name getOutlookMailMessages
-GET {{baseUrl}}/outlook/mail/messages/{{userId}}
+# ### Get Outlook Mail messages
+# # @name getOutlookMailMessages
+# GET {{baseUrl}}/outlook/mail/messages/{{userId}}
 
-### === INTEGRATION ERROR SCENARIOS ===
+# ### === INTEGRATION ERROR SCENARIOS ===
 
-### Test get integrations status with invalid user ID
-# @name getIntegrationsStatusInvalidUser
-GET {{baseUrl}}/integrations/status/invalid-user-id
+# ### Test get integrations status with invalid user ID
+# # @name getIntegrationsStatusInvalidUser
+# GET {{baseUrl}}/integrations/status/invalid-user-id
 
-### Test get Google auth URL with invalid user ID
-# @name getGoogleAuthUrlInvalidUser
-GET {{baseUrl}}/integrations/google/auth-url/invalid-user-id
+# ### Test get Google auth URL with invalid user ID
+# # @name getGoogleAuthUrlInvalidUser
+# GET {{baseUrl}}/integrations/google/auth-url/invalid-user-id
 
-### Test Google OAuth callback without code
-# @name googleOAuthCallbackNoCode
-POST {{baseUrl}}/integrations/google/callback
-Content-Type: application/json
+# ### Test Google OAuth callback without code
+# # @name googleOAuthCallbackNoCode
+# POST {{baseUrl}}/integrations/google/callback
+# Content-Type: application/json
 
-{
-  "state": "user_{{userId}}"
-}
+# {
+#   "state": "user_{{userId}}"
+# }
 
-### Test Google OAuth callback with invalid code
-# @name googleOAuthCallbackInvalidCode
-POST {{baseUrl}}/integrations/google/callback
-Content-Type: application/json
+# ### Test Google OAuth callback with invalid code
+# # @name googleOAuthCallbackInvalidCode
+# POST {{baseUrl}}/integrations/google/callback
+# Content-Type: application/json
 
-{
-  "code": "invalid-code",
-  "state": "user_{{userId}}"
-}
+# {
+#   "code": "invalid-code",
+#   "state": "user_{{userId}}"
+# }
 
-### Test Outlook OAuth callback without code
-# @name outlookOAuthCallbackNoCode
-POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
-Content-Type: application/json
+# ### Test Outlook OAuth callback without code
+# # @name outlookOAuthCallbackNoCode
+# POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
+# Content-Type: application/json
 
-{
-  "state": "user_{{userId}}"
-}
+# {
+#   "state": "user_{{userId}}"
+# }
 
-### Test Outlook OAuth callback with invalid code
-# @name outlookOAuthCallbackInvalidCode
-POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
-Content-Type: application/json
+# ### Test Outlook OAuth callback with invalid code
+# # @name outlookOAuthCallbackInvalidCode
+# POST {{baseUrl}}/integrations/outlook/callback/{{userId}}
+# Content-Type: application/json
 
-{
-  "code": "invalid-code",
-  "state": "user_{{userId}}"
-}
+# {
+#   "code": "invalid-code",
+#   "state": "user_{{userId}}"
+# }
 
-### Test Google Calendar events without integration
-# @name getGoogleCalendarEventsNoIntegration
-GET {{baseUrl}}/integrations/google/calendar/events/{{userId}}
+# ### Test Google Calendar events without integration
+# # @name getGoogleCalendarEventsNoIntegration
+# GET {{baseUrl}}/integrations/google/calendar/events/{{userId}}
 
-### Test Gmail messages without integration
-# @name getGmailMessagesNoIntegration
-GET {{baseUrl}}/integrations/google/gmail/messages/{{userId}}
+# ### Test Gmail messages without integration
+# # @name getGmailMessagesNoIntegration
+# GET {{baseUrl}}/integrations/google/gmail/messages/{{userId}}
 
-### Test Outlook Calendar events without integration
-# @name getOutlookCalendarEventsNoIntegration
-GET {{baseUrl}}/integrations/outlook/calendar/events/{{userId}}
+# ### Test Outlook Calendar events without integration
+# # @name getOutlookCalendarEventsNoIntegration
+# GET {{baseUrl}}/integrations/outlook/calendar/events/{{userId}}
 
-### Test Outlook Mail messages without integration
-# @name getOutlookMailMessagesNoIntegration
-GET {{baseUrl}}/integrations/outlook/mail/messages/{{userId}}
+# ### Test Outlook Mail messages without integration
+# # @name getOutlookMailMessagesNoIntegration
+# GET {{baseUrl}}/integrations/outlook/mail/messages/{{userId}}
 
-### Test with non-existent user ID
-# @name getIntegrationsStatusNonExistentUser
-GET {{baseUrl}}/integrations/status/non-existent-user-123
+# ### Test with non-existent user ID
+# # @name getIntegrationsStatusNonExistentUser
+# GET {{baseUrl}}/integrations/status/non-existent-user-123
 
-### Test Google Calendar events with non-existent user
-# @name getGoogleCalendarEventsNonExistentUser
-GET {{baseUrl}}/integrations/google/calendar/events/non-existent-user-123
+# ### Test Google Calendar events with non-existent user
+# # @name getGoogleCalendarEventsNonExistentUser
+# GET {{baseUrl}}/integrations/google/calendar/events/non-existent-user-123
 
-### Test Gmail messages with non-existent user
-# @name getGmailMessagesNonExistentUser
-GET {{baseUrl}}/integrations/google/gmail/messages/non-existent-user-123
+# ### Test Gmail messages with non-existent user
+# # @name getGmailMessagesNonExistentUser
+# GET {{baseUrl}}/integrations/google/gmail/messages/non-existent-user-123
 
-### Test Outlook Calendar events with non-existent user
-# @name getOutlookCalendarEventsNonExistentUser
-GET {{baseUrl}}/integrations/outlook/calendar/events/non-existent-user-123
+# ### Test Outlook Calendar events with non-existent user
+# # @name getOutlookCalendarEventsNonExistentUser
+# GET {{baseUrl}}/integrations/outlook/calendar/events/non-existent-user-123
 
-### Test Outlook Mail messages with non-existent user
-# @name getOutlookMailMessagesNonExistentUser
-GET {{baseUrl}}/integrations/outlook/mail/messages/non-existent-user-123
+# ### Test Outlook Mail messages with non-existent user
+# # @name getOutlookMailMessagesNonExistentUser
+# GET {{baseUrl}}/integrations/outlook/mail/messages/non-existent-user-123

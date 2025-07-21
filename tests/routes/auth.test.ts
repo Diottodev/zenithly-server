@@ -4,12 +4,13 @@ import { createApp } from '../../src/server.ts';
 
 describe('Auth Routes', () => {
   let app: FastifyInstance;
-
+  const prefix = '/v1/api';
   beforeEach(async () => {
     app = createApp();
     await app.ready();
     // Clear all mocks before each test
     vi.clearAllMocks();
+    // Não chame listen: Fastify com inject não precisa subir servidor real
   });
 
   afterEach(async () => {
@@ -44,7 +45,7 @@ describe('Auth Routes', () => {
       });
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/login',
+        url: `${prefix}/auth/login`,
         payload: {
           email: 'john@example.com',
           password: 'password123',
@@ -76,7 +77,7 @@ describe('Auth Routes', () => {
       });
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/login',
+        url: `${prefix}/auth/login`,
         payload: {
           email: 'invalid@example.com',
           password: 'wrongpassword',
@@ -90,7 +91,7 @@ describe('Auth Routes', () => {
     it('should return error for invalid email format', async () => {
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/login',
+        url: `${prefix}/auth/login`,
         payload: {
           email: 'invalid-email',
           password: 'password123',
@@ -103,7 +104,7 @@ describe('Auth Routes', () => {
     it('should return error for missing password', async () => {
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/login',
+        url: `${prefix}/auth/login`,
         payload: {
           email: 'john@example.com',
         },
@@ -138,7 +139,7 @@ describe('Auth Routes', () => {
       });
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/register',
+        url: `${prefix}/auth/register`,
         payload: {
           name: 'John Doe',
           email: 'john@example.com',
@@ -154,7 +155,7 @@ describe('Auth Routes', () => {
     it('should return error for invalid email format', async () => {
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/register',
+        url: `${prefix}/auth/register`,
         payload: {
           name: 'John Doe',
           email: 'invalid-email',
@@ -168,7 +169,7 @@ describe('Auth Routes', () => {
     it('should return error for short password', async () => {
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/register',
+        url: `${prefix}/auth/register`,
         payload: {
           name: 'John Doe',
           email: 'john@example.com',
@@ -187,7 +188,7 @@ describe('Auth Routes', () => {
       });
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/logout',
+        url: `${prefix}/auth/logout`,
         headers: {
           authorization: 'Bearer mock-token',
         },
@@ -246,7 +247,7 @@ describe('Auth Routes', () => {
       );
       const response = await app.inject({
         method: 'GET',
-        url: '/auth/session',
+        url: `${prefix}/auth/session`,
         headers: {
           authorization: 'Bearer mock-token',
         },
@@ -260,7 +261,7 @@ describe('Auth Routes', () => {
     it('should return 401 for missing token', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: '/auth/session',
+        url: `${prefix}/auth/session`,
       });
       expect(response.statusCode).toBe(401);
       const body = JSON.parse(response.body);
@@ -291,7 +292,7 @@ describe('Auth Routes', () => {
       });
       const response = await app.inject({
         method: 'GET',
-        url: '/auth/session',
+        url: `${prefix}/auth/session`,
         headers: {
           authorization: 'Bearer invalid-token',
         },
@@ -304,7 +305,7 @@ describe('Auth Routes', () => {
     it('should return available auth providers', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: '/auth/providers',
+        url: `${prefix}/auth/providers`,
       });
       expect(response.statusCode).toBe(200);
       const body = JSON.parse(response.body);
