@@ -24,12 +24,12 @@ export const auth = betterAuth({
     github: {
       clientId: env.GITHUB_CLIENT_ID || '',
       clientSecret: env.GITHUB_CLIENT_SECRET || '',
-      redirectURI: `${env.BETTER_AUTH_URL || 'http://localhost:8080'}/api/auth/callback/github`,
+      redirectURI: `${env.BETTER_AUTH_URL || 'http://localhost:8080'}/${env.VERSION}/api/auth/callback/github`,
     },
     google: {
       clientId: env.GOOGLE_CLIENT_ID || '',
       clientSecret: env.GOOGLE_CLIENT_SECRET || '',
-      redirectURI: `${env.BETTER_AUTH_URL || 'http://localhost:8080'}/api/auth/callback/google`,
+      redirectURI: `${env.BETTER_AUTH_URL || 'http://localhost:8080'}/${env.VERSION}/api/auth/callback/google`,
     },
   },
   session: {
