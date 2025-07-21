@@ -1,9 +1,5 @@
-import { log } from 'node:console';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { fastifyCors } from '@fastify/cors';
 import { fastifyJwt } from '@fastify/jwt';
-import { fastifyStatic } from '@fastify/static';
 import { fastify } from 'fastify';
 import * as v from 'valibot';
 import { env } from './env.ts';
@@ -11,19 +7,28 @@ import { authRoutes } from './http/routes/auth.ts';
 import { gmailRoutes } from './http/routes/gmail.ts';
 import { googleCalendarRoutes } from './http/routes/google-calendar.ts';
 import { integrationsRoutes } from './http/routes/integrations.ts';
+import { noteRoutes } from './http/routes/notes.ts';
 import { outlookRoutes } from './http/routes/outlook.ts';
 import { outlookCalendarRoutes } from './http/routes/outlook-calendar.ts';
+import { passwordRoutes } from './http/routes/passwords.ts';
+import { taskRoutes } from './http/routes/tasks.ts';
 import { userRoutes } from './http/routes/user.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 export function createApp() {
   const app = fastify({ logger: true });
-  app.register(fastifyStatic, {
-    root: path.join(__dirname, '..', 'public'),
-  });
+  app.addContentTypeParser(
+    'application/x-www-form-urlencoded',
+    (_request, payload, done) => {
+      let body = '';
+      payload.on('data', (chunk) => {
+        body += chunk.toString();
+      });
+      payload.on('end', () => {
+        done(null, Object.fromEntries(new URLSearchParams(body)));
+      });
+    }
+  );
   app.register(fastifyCors, {
     origin: [env.FRONTEND_URL || 'http://localhost:3000'],
     credentials: true,
@@ -99,6 +104,13 @@ export function createApp() {
         // If parsing fails, fall through to generic error
       }
     }
+    // Handle unsupported media type (Content-Type)
+    if (error.statusCode === 415) {
+      return reply.code(415).send({
+        error: 'Tipo de conteúdo não suportado',
+        message: error.message || 'Content-Type inválido',
+      });
+    }
     // Handle other Fastify validation errors
     if (error.statusCode === 400) {
       return reply.code(400).send({
@@ -122,7 +134,7 @@ export function createApp() {
     };
   });
   // Health check endpoint
-  app.get('/health', async () => {
+  app.get(`/${env.VERSION}/api/health`, async () => {
     const healthCheck: {
       status: string;
       timestamp: string;
@@ -152,21 +164,47 @@ export function createApp() {
     }
     return healthCheck;
   });
-  app.register(gmailRoutes);
-  app.register(googleCalendarRoutes);
-  app.register(outlookRoutes);
-  app.register(outlookCalendarRoutes);
-  app.register(userRoutes);
-  app.register(authRoutes);
-  app.register(integrationsRoutes);
+  app.register(gmailRoutes, {
+    prefix: `/${env.VERSION}/api/gmail`,
+  });
+  app.register(googleCalendarRoutes, {
+    prefix: `/${env.VERSION}/api/google/calendar`,
+  });
+  app.register(outlookRoutes, {
+    prefix: `/${env.VERSION}/api/outlook`,
+  });
+  app.register(outlookCalendarRoutes, {
+    prefix: `/${env.VERSION}/api/outlook/calendar`,
+  });
+  app.register(userRoutes, {
+    prefix: `/${env.VERSION}/api/user`,
+  });
+  app.register(authRoutes, {
+    prefix: `/${env.VERSION}/api/auth`,
+  });
+  app.register(integrationsRoutes, {
+    prefix: `/${env.VERSION}/api/integrations`,
+  });
+  app.register(noteRoutes, {
+    prefix: `/${env.VERSION}/api/notes`,
+  });
+  app.register(taskRoutes, {
+    prefix: `/${env.VERSION}/api/tasks`,
+  });
+  app.register(passwordRoutes, {
+    prefix: `/${env.VERSION}/api/passwords`,
+  });
   return app;
 }
-// Starting server
-const app = createApp();
-app.listen({ port: env.PORT, host: env.HOST }, (err) => {
-  if (err) {
-    log(err, 'Server failed to start');
-    process.exit(1);
-  }
-  log(`Server is running at http://${env.HOST}:${env.PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  const app = createApp();
+  app.listen({ port: env.PORT, host: env.HOST }, (err) => {
+    if (err) {
+      app.log.error(err, 'Server failed to start');
+      process.exit(1);
+    }
+    app.log.info(
+      `Server running at http://${env.HOST}:${env.PORT}/${env.VERSION}/api`
+    );
+  });
+}
