@@ -87,25 +87,22 @@ jobs:
           script: |
             export PATH="$HOME/.local/share/yarn:$PATH"
 
-            # Ir para diretório da aplicação (ajuste o caminho correto)
+            # Se usa nvm, carregue ele:
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
             cd /home/ubuntu/zenithly-server || cd /var/www/zenithly-server || exit 1
 
-            # Atualizar código
             git pull origin master
 
-            # Carregar variáveis de ambiente
             set -a
             . .env
             set +a
 
-            # Instalar dependências
             yarn install --frozen-lockfile
 
-            # Rodar migrações
             yarn db:migrate
 
-            # Reiniciar app no PM2
             pm2 start ecosystem.config.cjs --env production --update-env
 
-            # Mostrar status PM2
             pm2 status
