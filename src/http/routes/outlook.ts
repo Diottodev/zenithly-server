@@ -1,19 +1,16 @@
 import { eq } from 'drizzle-orm';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { schema } from '../../db/drizzle/index.ts';
-import { userParamsSchema } from '../schemas/user.ts';
 
 export function outlookRoutes(app: FastifyInstance) {
   // GET /outlook/messages - Listar mensagens do Outlook
   app.get<{
-    Params: { id: string };
     Querystring: { pageToken?: string; maxResults?: string };
   }>(
-    '/outlook/messages/:id',
+    '/messages',
     {
       schema: {
-        params: userParamsSchema,
         querystring: {
           type: 'object',
           properties: {
@@ -25,7 +22,9 @@ export function outlookRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = request.params.id;
+        const userId = (
+          request.user as FastifyRequest & { user: { sub: string } }
+        ).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }

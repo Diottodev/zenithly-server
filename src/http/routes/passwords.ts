@@ -22,8 +22,7 @@ export function passwordRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { service, username, password } =
-        request.body as TCreatePassword;
+      const { service, username, password } = request.body as TCreatePassword;
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
       try {
@@ -84,8 +83,7 @@ export function passwordRoutes(app: FastifyInstance) {
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
       const { id } = request.params as TRouteParams;
-      const { service, username, password } =
-        request.body as TUpdatePassword;
+      const { service, username, password } = request.body as TUpdatePassword;
       try {
         let hashedPassword: string | undefined;
         if (password) {

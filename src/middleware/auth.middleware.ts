@@ -1,14 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-type TAuthenticatedRequest = FastifyRequest & {
-  currentUser?: unknown;
-  currentSession?: unknown;
-};
-
-export async function authMiddleware(
-  request: TAuthenticatedRequest,
+export const authMiddleware = async (
+  request: FastifyRequest,
   reply: FastifyReply
-) {
+) => {
   try {
     const sessionToken = request.headers.authorization?.replace('Bearer ', '');
     if (!sessionToken) {
@@ -28,12 +23,11 @@ export async function authMiddleware(
         message: 'Sessão inválida ou expirada',
       });
     }
-    request.currentUser = sessionData.user;
-    request.currentSession = sessionData.session;
+    request.user = sessionData.user;
   } catch {
     return reply.code(401).send({
       error: 'Não autenticado',
       message: 'Token inválido ou expirado',
     });
   }
-}
+};

@@ -4,24 +4,23 @@ import { extractSessionToken } from '../../utils/extract-session-token.ts';
 import { handleAuthError } from '../handlers/handle-error-auth.ts';
 import {
   createUserSchema,
-  type Login,
   loginSchema,
-} from '../schemas/user-routes.schema.ts';
+  type TCreateUser,
+  type TLogin,
+} from '../schemas/user.ts';
 import type { THandleError } from '../types/handle-error-login.ts';
 
 export function authRoutes(app: FastifyInstance) {
-  // POST /auth/login - Login with email and password using better-auth
-  app.post<{
-    Body: Login;
-  }>(
-    '/auth/login',
+  // POST /login - Login with email and password using better-auth
+  app.post(
+    '/login',
     {
       schema: {
         body: loginSchema,
       },
     },
     async (request, reply) => {
-      const { email, password } = request.body;
+      const { email, password } = request.body as TLogin;
       if (!(email && password)) {
         return reply.code(400).send({
           error: 'Dados inválidos',
@@ -53,8 +52,8 @@ export function authRoutes(app: FastifyInstance) {
     }
   );
 
-  // POST /auth/logout - Logout using better-auth
-  app.post('/auth/logout', async (request, reply) => {
+  // POST /logout - Logout using better-auth
+  app.post('/logout', async (request, reply) => {
     try {
       const sessionToken = request.headers.authorization?.replace(
         'Bearer ',
@@ -79,8 +78,8 @@ export function authRoutes(app: FastifyInstance) {
     }
   });
 
-  // GET /auth/session - Verify current session using better-auth
-  app.get('/auth/session', async (request, reply) => {
+  // GET /session - Verify current session using better-auth
+  app.get('/session', async (request, reply) => {
     try {
       const sessionToken = request.headers.authorization?.replace(
         'Bearer ',
@@ -107,7 +106,7 @@ export function authRoutes(app: FastifyInstance) {
             : {}),
           ...(sessionTokenFromCookie
             ? {
-                cookie: `better-auth.session_token=${sessionTokenFromCookie}`,
+                cookie: `__Secure-better-auth.session_token=${sessionTokenFromCookie}`,
               }
             : {}),
         }),
@@ -131,18 +130,16 @@ export function authRoutes(app: FastifyInstance) {
     }
   });
 
-  // POST /auth/register - Register with email and password using better-auth
-  app.post<{
-    Body: Login & { name: string };
-  }>(
-    '/auth/register',
+  // POST /register - Register with email and password using better-auth
+  app.post(
+    '/register',
     {
       schema: {
         body: createUserSchema,
       },
     },
     async (request, reply) => {
-      const { name, email, password } = request.body;
+      const { name, email, password } = request.body as TCreateUser;
       try {
         const signUpResult = await app.betterAuth.api.signUpEmail({
           body: {
@@ -160,6 +157,7 @@ export function authRoutes(app: FastifyInstance) {
         return reply.code(201).send({
           message: 'Conta criada com sucesso',
           user: signUpResult.user,
+          token: signUpResult.token,
         });
       } catch (error) {
         app.log.error(error, 'Erro no registro');
@@ -168,8 +166,8 @@ export function authRoutes(app: FastifyInstance) {
     }
   );
 
-  // GET /auth/github - GitHub OAuth login
-  app.get('/auth/github', async (_request, reply) => {
+  // GET /github - GitHub OAuth login
+  app.get('/github', async (_request, reply) => {
     try {
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
@@ -196,8 +194,8 @@ export function authRoutes(app: FastifyInstance) {
     }
   });
 
-  // GET /auth/google - Google OAuth login
-  app.get('/auth/google', async (_request, reply) => {
+  // GET /google - Google OAuth login
+  app.get('/google', async (_request, reply) => {
     try {
       const googleResult = await app.betterAuth.api.signInSocial({
         body: {
@@ -224,8 +222,8 @@ export function authRoutes(app: FastifyInstance) {
     }
   });
 
-  // GET /auth/callback - Callback de sucesso do OAuth
-  app.get('/auth/callback', async (request, reply) => {
+  // GET /callback - Callback de sucesso do OAuth
+  app.get('/callback', async (request, reply) => {
     try {
       const sessionToken = extractSessionToken({
         cookie: request.headers.cookie,
@@ -260,17 +258,17 @@ export function authRoutes(app: FastifyInstance) {
     }
   });
 
-  // GET /auth/callback/error - Callback de erro do OAuth
+  // GET /callback/error - Callback de erro do OAuth
   app.get<{
     Querystring: { error?: string };
-  }>('/auth/callback/error', (request, reply) => {
+  }>('/callback/error', (request, reply) => {
     const error = request.query.error || 'unknown_error';
     const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';
     return reply.redirect(`${frontendURL}/auth/callback?error=${error}`);
   });
 
-  // GET /auth/providers - List OAuth providers
-  app.get('/auth/providers', (_, reply) => {
+  // GET /providers - List OAuth providers
+  app.get('/providers', (_, reply) => {
     return reply.code(200).send({
       providers: [
         {

@@ -60,10 +60,20 @@ export default fp((fastify, _opts, done) => {
       const webRequest = new Request(url.toString(), {
         method: request.method,
         headers,
-        body:
-          request.method !== 'GET' && request.method !== 'HEAD'
-            ? JSON.stringify(request.body)
-            : undefined,
+        body: (() => {
+          if (request.method !== 'GET' && request.method !== 'HEAD') {
+            if (
+              request.headers['content-type'] ===
+              'application/x-www-form-urlencoded'
+            ) {
+              return JSON.stringify(
+                Object.fromEntries(new URLSearchParams(request.body as string))
+              );
+            }
+            return JSON.stringify(request.body);
+          }
+          return;
+        })(),
       });
       try {
         const response = await auth.handler(webRequest);
@@ -123,8 +133,8 @@ export default fp((fastify, _opts, done) => {
             authorization: `Bearer ${token}`,
             ...(sessionTokenFromCookie
               ? {
-                cookie: `__Secure-better-auth.session_token=${sessionTokenFromCookie}`,
-              }
+                  cookie: `__Secure-better-auth.session_token=${sessionTokenFromCookie}`,
+                }
               : {}),
           }),
         });

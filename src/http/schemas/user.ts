@@ -30,7 +30,6 @@ export const loginSchema = v.object({
   password: v.pipe(v.string(), v.minLength(1, 'Senha é obrigatória')),
 });
 
-
 export type TCreateUser = v.InferOutput<typeof createUserSchema>;
 export type TUpdateUser = v.InferOutput<typeof updateUserSchema>;
 export type TLogin = v.InferOutput<typeof loginSchema>;
