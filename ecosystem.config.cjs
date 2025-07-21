@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: 'zenithly-server',
-      script: 'pnpm',
+      script: 'yarn',
       args: 'start',
       interpreter: 'none',
       exec_mode: 'fork',
@@ -55,7 +55,7 @@ module.exports = {
     },
     {
       name: 'zenithly-docs',
-      script: 'pnpm',
+      script: 'yarn',
       args: 'docs:start',
       interpreter: 'none',
       exec_mode: 'fork',

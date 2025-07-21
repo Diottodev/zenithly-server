@@ -77,7 +77,7 @@ Para configurar e rodar o projeto localmente, siga os passos abaixo:
 ### Pré-requisitos
 
 - Node.js (versão 18 ou superior)
-- pnpm (gerenciador de pacotes)
+- yarn (gerenciador de pacotes)
 - PostgreSQL (servidor de banco de dados)
 
 ### Passos
@@ -92,7 +92,7 @@ Para configurar e rodar o projeto localmente, siga os passos abaixo:
 2.  **Instale as dependências:**
 
     ```bash
-    pnpm install
+    yarn install
     ```
 
 3.  **Configure as variáveis de ambiente:**
@@ -111,27 +111,27 @@ Para configurar e rodar o projeto localmente, siga os passos abaixo:
     Certifique-se de que seu servidor PostgreSQL esteja rodando. Em seguida, execute as migrações para criar as tabelas necessárias:
 
     ```bash
-    pnpm run db:migrate
+    yarn run db:migrate
     ```
 
 5.  **Popule o banco de dados (opcional):**
     Se desejar popular o banco de dados com dados de exemplo, execute:
 
     ```bash
-    pnpm run db:seed
+    yarn run db:seed
     ```
 
 6.  **Inicie o servidor em modo de desenvolvimento:**
 
     ```bash
-    pnpm run dev
+    yarn run dev
     ```
 
     O servidor estará disponível em `http://localhost:3000` (ou a porta configurada).
 
 7.  **Inicie o servidor em modo de produção:**
     ```bash
-    pnpm run start
+    yarn run start
     ```
 
 ## Testes
@@ -140,15 +140,15 @@ Para rodar os testes do projeto, utilize os seguintes comandos:
 
 - Rodar todos os testes:
   ```bash
-  pnpm run test
+  yarn run test
   ```
 - Rodar testes em modo watch:
   ```bash
-  pnpm run test:watch
+  yarn run test:watch
   ```
 - Gerar relatório de cobertura de testes:
   ```bash
-  pnpm run test:coverage
+  yarn run test:coverage
   ```
 
 ## Documentação
@@ -158,7 +158,7 @@ A documentação completa da API e guias de uso estão disponíveis no diretóri
 1.  **Inicie o servidor de documentação:**
 
     ```bash
-    pnpm run docs:dev
+    yarn run docs:dev
     ```
 
     A documentação estará disponível em `http://localhost:5173` (ou a porta padrão do VitePress).
@@ -166,12 +166,12 @@ A documentação completa da API e guias de uso estão disponíveis no diretóri
 2.  **Construir a documentação para deploy:**
 
     ```bash
-    pnpm run docs:build
+    yarn run docs:build
     ```
 
 3.  **Visualizar a build da documentação:**
     ```bash
-    pnpm run docs:preview
+    yarn run docs:preview
     ```
 
 ## Contribuição

@@ -28,12 +28,12 @@ var __toESM = (mod, isNodeMode, target2) => (target2 = mod != null ? __create(__
   mod
 ));
 var init_esm_shims = __esm({
-  "../../node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.51.1_@types+node@22.13.14__jiti@2.4.2_postcss@8.5_96eb05a9d65343021e53791dd83f3773/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.yarn/tsup@8.4.0_@microsoft+api-extractor@7.51.1_@types+node@22.13.14__jiti@2.4.2_postcss@8.5_96eb05a9d65343021e53791dd83f3773/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
 var require_rfdc = __commonJS({
-  "../../node_modules/.pnpm/rfdc@1.4.1/node_modules/rfdc/index.js"(exports, module) {
+  "../../node_modules/.yarn/rfdc@1.4.1/node_modules/rfdc/index.js"(exports, module) {
     "use strict";
     init_esm_shims();
     module.exports = rfdc2;
@@ -284,7 +284,7 @@ function debounce(fn, wait = 25, options = {}) {
     });
     return currentPromise;
   };
-  return function(...args) {
+  return function (...args) {
     if (currentPromise) {
       if (options.trailing) {
         trailingArgs = args;
@@ -554,15 +554,15 @@ var __toESM2 = (mod, isNodeMode, target22) => (target22 = mod != null ? __create
   mod
 ));
 var init_esm_shims2 = __esm2({
-  "../../node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.51.1_@types+node@22.13.14__jiti@2.4.2_postcss@8.5_96eb05a9d65343021e53791dd83f3773/node_modules/tsup/assets/esm_shims.js"() {
+  "../../node_modules/.yarn/tsup@8.4.0_@microsoft+api-extractor@7.51.1_@types+node@22.13.14__jiti@2.4.2_postcss@8.5_96eb05a9d65343021e53791dd83f3773/node_modules/tsup/assets/esm_shims.js"() {
     "use strict";
   }
 });
 var require_speakingurl = __commonJS2({
-  "../../node_modules/.pnpm/speakingurl@14.0.1/node_modules/speakingurl/lib/speakingurl.js"(exports, module) {
+  "../../node_modules/.yarn/speakingurl@14.0.1/node_modules/speakingurl/lib/speakingurl.js"(exports, module) {
     "use strict";
     init_esm_shims2();
-    (function(root) {
+    (function (root) {
       "use strict";
       var charMap = {
         // latin
@@ -1955,7 +1955,7 @@ var require_speakingurl = __commonJS2({
           symbol = opts.lang && symbolMap[opts.lang] && convertSymbols ? symbolMap[opts.lang] : convertSymbols ? symbolMap.en : {};
           langChar = opts.lang && langCharMap[opts.lang] ? langCharMap[opts.lang] : opts.lang === false || opts.lang === true ? {} : langCharMap.en;
           if (opts.titleCase && typeof opts.titleCase.length === "number" && Array.prototype.toString.call(opts.titleCase)) {
-            opts.titleCase.forEach(function(v) {
+            opts.titleCase.forEach(function (v) {
               customReplacements[v + ""] = v + "";
             });
             titleCase = true;
@@ -1963,11 +1963,11 @@ var require_speakingurl = __commonJS2({
             titleCase = !!opts.titleCase;
           }
           if (opts.custom && typeof opts.custom.length === "number" && Array.prototype.toString.call(opts.custom)) {
-            opts.custom.forEach(function(v) {
+            opts.custom.forEach(function (v) {
               customReplacements[v + ""] = v + "";
             });
           }
-          Object.keys(customReplacements).forEach(function(v) {
+          Object.keys(customReplacements).forEach(function (v) {
             var r;
             if (v.length > 1) {
               r = new RegExp("\\b" + escapeChars(v) + "\\b", "gi");
@@ -2031,7 +2031,7 @@ var require_speakingurl = __commonJS2({
           result += ch.replace(new RegExp("[^\\w\\s" + allowedChars + "_-]", "g"), separator);
         }
         if (titleCase) {
-          result = result.replace(/(\w)(\S*)/g, function(_, i2, r) {
+          result = result.replace(/(\w)(\S*)/g, function (_, i2, r) {
             var j = i2.toUpperCase() + (r !== null ? r : "");
             return Object.keys(customReplacements).indexOf(j.toLowerCase()) < 0 ? j : j.toLowerCase();
           });
@@ -2057,7 +2057,7 @@ var require_speakingurl = __commonJS2({
       var escapeChars = function escapeChars2(input) {
         return input.replace(/[-\\^$*+?.()|[\]{}\/]/g, "\\$&");
       };
-      var isReplacedCustomChar = function(ch, customReplacements) {
+      var isReplacedCustomChar = function (ch, customReplacements) {
         for (var c in customReplacements) {
           if (customReplacements[c] === ch) {
             return true;
@@ -2068,7 +2068,7 @@ var require_speakingurl = __commonJS2({
         module.exports = getSlug;
         module.exports.createSlug = createSlug;
       } else if (typeof define !== "undefined" && define.amd) {
-        define([], function() {
+        define([], function () {
           return getSlug;
         });
       } else {
@@ -2086,7 +2086,7 @@ var require_speakingurl = __commonJS2({
   }
 });
 var require_speakingurl2 = __commonJS2({
-  "../../node_modules/.pnpm/speakingurl@14.0.1/node_modules/speakingurl/index.js"(exports, module) {
+  "../../node_modules/.yarn/speakingurl@14.0.1/node_modules/speakingurl/index.js"(exports, module) {
     "use strict";
     init_esm_shims2();
     module.exports = require_speakingurl();
@@ -2475,7 +2475,7 @@ function waitForInspectorInit(cb) {
       cb();
     }
     if (total >= /* 5s */
-    5e3)
+      5e3)
       clearInterval(timer);
   }, 30);
 }
@@ -3543,10 +3543,12 @@ function createDevToolsApi(hooks2) {
     // send inspector state
     sendInspectorState(inspectorId) {
       const inspector = getInspector(inspectorId);
-      hooks2.callHook("sendInspectorState", { inspectorId, plugin: {
-        descriptor: inspector.descriptor,
-        setupFn: () => ({})
-      } });
+      hooks2.callHook("sendInspectorState", {
+        inspectorId, plugin: {
+          descriptor: inspector.descriptor,
+          setupFn: () => ({})
+        }
+      });
     },
     // inspect component inspector
     inspectComponentInspector() {

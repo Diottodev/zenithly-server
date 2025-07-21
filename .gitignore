@@ -18,9 +18,8 @@ coverage
 *.swo
 *~
 
-# Package managers (keep only pnpm)
+# Package managers (keep only yarn)
 package-lock.json
-yarn.lock
 npm-shrinkwrap.json
 
 # PM2 specific
