@@ -81,18 +81,4 @@ module.exports = {
       env_file: '.env',
     },
   ],
-
-  deploy: {
-    production: {
-      user: 'ubuntu',
-      host: 'ec2-18-231-26-160.sa-east-1.compute.amazonaws.com',
-      ref: 'origin/master',
-      repo: 'https://github.com/Diottodev/zenithly-server.git',
-      path: 'zenithly-server',
-      'pre-deploy-local': '',
-      'post-deploy':
-        'pnpm install --frozen-lockfile && pnpm db:migrate && pnpm docs:build && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': '',
-    },
-  },
 };
