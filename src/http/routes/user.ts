@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { schema } from '../../db/drizzle/index.ts';
 import type { TUpdateUser } from '../schemas/index.ts';
@@ -8,8 +8,7 @@ import { updateUserSchema } from '../schemas/user.ts';
 export function userRoutes(app: FastifyInstance) {
   // GET /users - Search user by ID
   app.get('/get', async (request, reply) => {
-    const { sub: id } =
-      (request.user as FastifyRequest & { sub: string }) || {};
+    const { sub: id } = (request.user as { sub: string }) || {};
     try {
       const user = await db
         .select({
@@ -52,7 +51,7 @@ export function userRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { sub: id } = request.user as FastifyRequest & { sub: string };
+      const { sub: id } = request.user as { sub: string };
       const updateData = request.body as TUpdateUser;
       try {
         const existingUser = await db
@@ -119,7 +118,7 @@ export function userRoutes(app: FastifyInstance) {
 
   // DELETE /users - Delete user
   app.delete('/delete', async (request, reply) => {
-    const { sub: id } = request.user as FastifyRequest & { sub: string };
+    const { sub: id } = request.user as { sub: string };
     try {
       const existingUser = await db
         .select({ id: schema.user.id })

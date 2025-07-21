@@ -133,7 +133,7 @@ export default fp((fastify, _opts, done) => {
             authorization: `Bearer ${token}`,
             ...(sessionTokenFromCookie
               ? {
-                  cookie: `__Secure-better-auth.session_token=${sessionTokenFromCookie}`,
+                  cookie: sessionTokenFromCookie,
                 }
               : {}),
           }),

@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { schema } from '../../db/drizzle/index.ts';
 
@@ -22,9 +22,7 @@ export function outlookRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = (
-          request.user as FastifyRequest & { user: { sub: string } }
-        ).user.sub;
+        const userId = (request.user as { user: { sub: string } }).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }

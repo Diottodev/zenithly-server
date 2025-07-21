@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { notes } from '../../db/drizzle/notes.ts';
 import type { TRouteParams, TUpdateNote } from '../schemas/index.ts';
@@ -19,8 +19,7 @@ export function noteRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { title, content } = request.body as TCreateNote;
-      const userId = (request as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       const value = {
         title: title as string,
         content: content as string,
@@ -36,8 +35,7 @@ export function noteRoutes(app: FastifyInstance) {
     }
   );
   app.get('/list', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
 
     try {
       const userNotes = await db
@@ -52,8 +50,7 @@ export function noteRoutes(app: FastifyInstance) {
     }
   });
   app.get('/get/:id', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     const { id } = request.params as TRouteParams;
     try {
       const [note] = await db
@@ -79,8 +76,7 @@ export function noteRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       const { id } = request.params as TRouteParams;
       const { title, content } = request.body as TUpdateNote;
       try {
@@ -100,8 +96,7 @@ export function noteRoutes(app: FastifyInstance) {
     }
   );
   app.delete('/delete/:id', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     const { id } = request.params as TRouteParams;
     try {
       const [deletedNote] = await db

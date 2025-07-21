@@ -1,13 +1,11 @@
+import { env } from '../env.ts';
+
 /**
  * Extracts the session token from a given cookie header string.
  *
  * @param param0 - An object containing the `cookie` string, which may be undefined.
  * @returns The extracted session token if found, otherwise `undefined`.
- *
- * @remarks
- * The function decodes the cookie header and attempts to match it against
- * the `SESSION_TOKEN_REGEX` regular expression. If a match is found, the session
- * token is returned; otherwise, `undefined` is returned.
+ 
  */
 export function extractSessionToken({
   cookie,
@@ -25,9 +23,14 @@ export function extractSessionToken({
     },
     {} as Record<string, string>
   );
-  return (
-    cookies['__Secure-better-auth.session_token'] ||
-    cookies['better-auth.session_token'] ||
-    undefined
-  );
+  if (env.NODE_ENV === 'development') {
+    if ('better-auth.session_token' in cookies) {
+      return `better-auth.session_token=${cookies['better-auth.session_token']}`;
+    }
+    return;
+  }
+  if ('__Secure-better-auth.session_token' in cookies) {
+    return `__Secure-better-auth.session_token=${cookies['__Secure-better-auth.session_token']}`;
+  }
+  return;
 }

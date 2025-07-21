@@ -18,7 +18,7 @@ describe('Integrations Routes', () => {
       url: '/v1/api/integrations/status',
       headers: { authorization: 'Bearer fake-token' },
     });
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(401);
     const body = response.json();
     expect(body).toHaveProperty('error');
   });

@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { schema } from '../../db/drizzle/index.ts';
 import { env } from '../../env.ts';
@@ -8,8 +8,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/status - Obter status das integrações do usuário
   app.get('/status', async (request, reply) => {
     try {
-      const id = (request.user as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const id = (request.user as { sub?: string })?.sub;
       if (!id) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -55,8 +54,7 @@ export function integrationsRoutes(app: FastifyInstance) {
       if (!env.GOOGLE_CLIENT_ID) {
         throw new Error('Credenciais do Google não configuradas');
       }
-      const id = (request.user as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const id = (request.user as { sub?: string })?.sub;
       const scopes = [
         'https://www.googleapis.com/auth/calendar',
         'https://www.googleapis.com/auth/gmail.modify',
@@ -101,9 +99,7 @@ export function integrationsRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { code } = request.body;
-        const userId = (
-          request.user as FastifyRequest & { user: { sub: string } }
-        ).user.sub;
+        const userId = (request.user as { user: { sub: string } }).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }
@@ -204,9 +200,7 @@ export function integrationsRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { code } = request.body;
-        const userId = (
-          request.user as FastifyRequest & { user: { sub: string } }
-        ).user.sub;
+        const userId = (request.user as { user: { sub: string } }).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }
@@ -284,9 +278,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/google/tokens - Obter tokens do Google
   app.get('/google/tokens', async (request, reply) => {
     try {
-      const userId = (
-        request.user as FastifyRequest & { user: { sub: string } }
-      ).user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -330,9 +322,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/google/refresh - Refresh token do Google
   app.get('/google/refresh', async (request, reply) => {
     try {
-      const userId = (
-        request.user as FastifyRequest & { user: { sub: string } }
-      ).user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -407,9 +397,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/outlook/tokens - Obter tokens do Outlook
   app.get('/outlook/tokens', async (request, reply) => {
     try {
-      const userId = (
-        request.user as FastifyRequest & { user: { sub: string } }
-      ).user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -450,9 +438,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/outlook/refresh - Refresh token do Outlook
   app.get('/outlook/refresh', async (request, reply) => {
     try {
-      const userId = (
-        request.user as FastifyRequest & { user: { sub: string } }
-      ).user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -525,8 +511,7 @@ export function integrationsRoutes(app: FastifyInstance) {
       if (!env.MICROSOFT_CLIENT_ID) {
         throw new Error('Credenciais do Microsoft não configuradas');
       }
-      const id = (request.user as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const id = (request.user as { sub?: string })?.sub;
       const scopes = [
         'https://graph.microsoft.com/calendars.readwrite',
         'https://graph.microsoft.com/mail.readwrite',

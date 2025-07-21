@@ -106,7 +106,7 @@ export function authRoutes(app: FastifyInstance) {
             : {}),
           ...(sessionTokenFromCookie
             ? {
-                cookie: `__Secure-better-auth.session_token=${sessionTokenFromCookie}`,
+                cookie: sessionTokenFromCookie,
               }
             : {}),
         }),
@@ -236,8 +236,7 @@ export function authRoutes(app: FastifyInstance) {
       }
       const sessionData = await app.betterAuth.api.getSession({
         headers: new Headers({
-          authorization: `Bearer ${sessionToken}`,
-          cookie: `__Secure-better-auth.session_token=${sessionToken}`,
+          cookie: sessionToken,
         }),
       });
       const frontendURL = env.FRONTEND_URL || 'http://localhost:3000';

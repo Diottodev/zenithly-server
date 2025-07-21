@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { google } from 'googleapis';
 import { db } from '../../db/connection.ts';
 import { userIntegrations } from '../../db/drizzle/user-integration.ts';
@@ -43,8 +43,7 @@ export function gmailRoutes(app: FastifyInstance) {
 
   // GET /gmail/messages - List messages
   app.get('/messages', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     try {
       const gmail = await getGmailClient(userId);
       const res = await gmail.users.messages.list({ userId: 'me' });
@@ -56,8 +55,7 @@ export function gmailRoutes(app: FastifyInstance) {
   });
   // GET /gmail/messages/:messageId - Get message details
   app.get('/messages/:messageId', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     const { messageId } = request.params as { messageId: string };
     try {
       const gmail = await getGmailClient(userId);
@@ -80,8 +78,7 @@ export function gmailRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       const { to, subject, body } = request.body as TSendGmail;
       try {
         const gmail = await getGmailClient(userId);

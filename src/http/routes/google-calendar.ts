@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { google } from 'googleapis';
 import { db } from '../../db/connection.ts';
 import { userIntegrations } from '../../db/drizzle/user-integration.ts';
@@ -49,8 +49,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
   };
   // GET /google/calendar/events - List events
   app.get('/events/list', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     try {
       const calendar = await getCalendarClient(userId);
       const res = await calendar.events.list({
@@ -75,8 +74,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       const event = request.body as TCreateGoogleCalendarEvent;
       try {
         const calendar = await getCalendarClient(userId);
@@ -100,8 +98,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request as FastifyRequest & { user: { sub: string } })
-        .user.sub;
+      const userId = (request.user as { user: { sub: string } }).user.sub;
       const { eventId } = request.params as { eventId: string };
       const event = request.body as TUpdateGoogleCalendarEvent;
       try {
@@ -120,8 +117,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
   );
   // DELETE /google/calendar/events/:eventId - Delete event
   app.delete('/events/delete/:eventId', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     const { eventId } = request.params as { eventId: string };
     try {
       const calendar = await getCalendarClient(userId);
@@ -138,8 +134,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
 
   // GET /google/calendar/calendars - List calendars and their colors
   app.get('/calendars/list', async (request, reply) => {
-    const userId = (request as FastifyRequest & { user: { sub: string } }).user
-      .sub;
+    const userId = (request.user as { user: { sub: string } }).user.sub;
     try {
       const calendar = await getCalendarClient(userId);
       const calendarListRes = await calendar.calendarList.list();
