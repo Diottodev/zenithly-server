@@ -7,7 +7,7 @@ Para interagir com a maioria dos endpoints do Zenithly Server, seu aplicativo fr
 O fluxo de autenticação geralmente segue os seguintes passos:
 
 1.  **Login do Usuário:** O usuário fornece suas credenciais (email e senha) ou inicia um fluxo OAuth (Google, GitHub).
-2.  **Requisição ao Servidor:** O frontend envia essas credenciais para o endpoint de login (`POST /auth/login`) ou inicia o fluxo OAuth (`GET /auth/google`, `GET /auth/github`).
+2.  **Requisição ao Servidor:** O frontend envia essas credenciais para o endpoint de login (`POST /auth/login`) ou inicia o fluxo OAuth (`GET /auth/github`, `GET /auth/google`).
 3.  **Resposta do Servidor:**
     *   Em caso de sucesso no login com email/senha, o servidor retorna um objeto contendo os dados do usuário e um `token` JWT.
     *   Em caso de sucesso no OAuth, o servidor redireciona o navegador para uma URL de callback no frontend, que incluirá o token JWT como um parâmetro de query.
@@ -60,7 +60,7 @@ async function fetchProtectedData() {
   }
 
   try {
-    const response = await fetch('/users/me', { // Exemplo de endpoint protegido
+    const response = await fetch('/users/get', { // Exemplo de endpoint protegido
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

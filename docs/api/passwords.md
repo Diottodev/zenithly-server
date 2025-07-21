@@ -1,8 +1,8 @@
 # Senhas
 
-Esta seção detalha os endpoints para gerenciamento de senhas dos usuários, permitindo criar, listar, buscar, atualizar e deletar senhas.
+Esta seção detalha os endpoints para gerenciamento de senhas dos usuários, permitindo criar, listar, buscar, atualizar e deletar senhas. Todos os endpoints requerem autenticação JWT.
 
-## `POST /passwords`
+## `POST /passwords/create`
 
 Cria uma nova entrada de senha para o usuário autenticado.
 
@@ -41,7 +41,7 @@ Cria uma nova entrada de senha para o usuário autenticado.
     }
     ```
 
-## `GET /passwords`
+## `GET /passwords/list`
 
 Lista todas as senhas armazenadas para o usuário autenticado.
 
@@ -70,7 +70,7 @@ Lista todas as senhas armazenadas para o usuário autenticado.
     }
     ```
 
-## `GET /passwords/:id`
+## `GET /passwords/get/:id`
 
 Busca uma entrada de senha específica pelo seu ID para o usuário autenticado.
 
@@ -106,7 +106,7 @@ Busca uma entrada de senha específica pelo seu ID para o usuário autenticado.
     }
     ```
 
-## `PUT /passwords/:id`
+## `PUT /passwords/update/:id`
 
 Atualiza uma entrada de senha existente pelo seu ID para o usuário autenticado.
 
@@ -154,7 +154,7 @@ Atualiza uma entrada de senha existente pelo seu ID para o usuário autenticado.
     }
     ```
 
-## `DELETE /passwords/:id`
+## `DELETE /passwords/delete/:id`
 
 Deleta uma entrada de senha existente pelo seu ID para o usuário autenticado.
 

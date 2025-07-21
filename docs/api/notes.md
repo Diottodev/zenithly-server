@@ -1,8 +1,8 @@
 # Notas
 
-Esta seção detalha os endpoints para gerenciamento de notas dos usuários, permitindo criar, listar, buscar, atualizar e deletar notas.
+Esta seção detalha os endpoints para gerenciamento de notas dos usuários, permitindo criar, listar, buscar, atualizar e deletar notas. Todos os endpoints requerem autenticação JWT.
 
-## `POST /notes`
+## `POST /notes/create`
 
 Cria uma nova nota para o usuário autenticado.
 
@@ -38,7 +38,7 @@ Cria uma nova nota para o usuário autenticado.
     }
     ```
 
-## `GET /notes`
+## `GET /notes/list`
 
 Lista todas as notas do usuário autenticado.
 
@@ -66,7 +66,7 @@ Lista todas as notas do usuário autenticado.
     }
     ```
 
-## `GET /notes/:id`
+## `GET /notes/get/:id`
 
 Busca uma nota específica pelo seu ID para o usuário autenticado.
 
@@ -101,7 +101,7 @@ Busca uma nota específica pelo seu ID para o usuário autenticado.
     }
     ```
 
-## `PUT /notes/:id`
+## `PUT /notes/update/:id`
 
 Atualiza uma nota existente pelo seu ID para o usuário autenticado.
 
@@ -146,7 +146,7 @@ Atualiza uma nota existente pelo seu ID para o usuário autenticado.
     }
     ```
 
-## `DELETE /notes/:id`
+## `DELETE /notes/delete/:id`
 
 Deleta uma nota existente pelo seu ID para o usuário autenticado.
 

@@ -1,41 +1,53 @@
-# Zenithly Server Documentation
+# Documentação do Zenithly Server
 
 Bem-vindo à documentação do Zenithly Server!
 
-Este servidor é o backend robusto e escalável para a aplicação Zenithly, projetado para gerenciar diversas funcionalidades essenciais, como autenticação de usuários, integração com serviços de terceiros (Google Calendar, Gmail, Outlook), gerenciamento de senhas, notas e tarefas.
+Este servidor é o backend robusto e escalável para a aplicação Zenithly, projetado para gerenciar diversas funcionalidades essenciais, como autenticação de usuários, gerenciamento de notas, senhas, tarefas e integrações com serviços de terceiros como Google Calendar e Outlook. Construído com foco em performance e segurança, este servidor oferece uma API RESTful completa para suportar as operações do frontend.
 
 ## Visão Geral
 
-O Zenithly Server é construído utilizando [Fastify](https://www.fastify.io/), um framework web rápido e de baixo overhead para Node.js, e [Valibot](https://valibot.dev/) para validação de esquemas. A persistência de dados é gerenciada com [Drizzle ORM](https://orm.drizzle.team/) e PostgreSQL.
+O Zenithly Server é construído com um conjunto de tecnologias modernas e eficientes, garantindo alta performance, segurança e facilidade de manutenção:
+
+*   **Node.js**: Ambiente de execução JavaScript assíncrono e orientado a eventos.
+*   **Fastify**: Framework web rápido e de baixo overhead para Node.js, focado em performance e experiência do desenvolvedor.
+*   **Drizzle ORM**: ORM TypeScript de próxima geração para bancos de dados relacionais, oferecendo tipagem segura e alta performance.
+*   **PostgreSQL**: Banco de dados relacional robusto e de código aberto.
+*   **Valibot**: Biblioteca de validação de dados leve e poderosa.
+*   **bcryptjs**: Para hashing seguro de senhas.
+*   **jsonwebtoken (JWT)**: Para autenticação baseada em tokens.
+*   **googleapis**: SDK oficial do Google para integração com serviços Google (e.g., Google Calendar).
 
 ### Principais Características:
 
-*   **Autenticação e Autorização:** Sistema seguro de autenticação baseado em JWT.
+*   **Autenticação e Autorização:** Sistema completo de registro, login, recuperação de senha e autenticação baseada em JWT.
+*   **Gerenciamento de Usuários**: Criação, leitura, atualização e exclusão de perfis de usuário.
+*   **Notas**: Funcionalidades para criar, organizar e gerenciar notas pessoais.
+*   **Senhas**: Armazenamento seguro e gerenciamento de senhas com criptografia.
+*   **Tarefas**: Criação e acompanhamento de tarefas e listas de afazeres.
 *   **Integrações:** Conectividade com Google Calendar, Gmail e Outlook para sincronização de dados.
-*   **Gerenciamento de Dados:** APIs para gerenciar senhas, notas e tarefas dos usuários.
-*   **Performance:** Desenvolvido com foco em alta performance e escalabilidade.
-*   **Validação de Dados:** Validação rigorosa de entrada e saída de dados usando Valibot.
+*   **Segurança**: Implementação de melhores práticas de segurança, incluindo criptografia de dados sensíveis e proteção contra ataques comuns.
+*   **Validação de Dados:** Validação rigorosa de todas as entradas para garantir a integridade dos dados.
 
 ## Estrutura do Projeto
 
+O projeto segue uma arquitetura modular, com a API organizada em rotas, handlers e schemas. A camada de banco de dados é abstraída pelo Drizzle ORM, garantindo uma interação segura e tipada com o PostgreSQL. A estrutura de pastas é organizada para facilitar a manutenção e a escalabilidade:
+
 ```
-.
-├── src/
-│   ├── db/                 # Configuração do banco de dados e schemas Drizzle
-│   ├── http/               # Definições de rotas, handlers e schemas HTTP
-│   │   ├── handlers/       # Funções de tratamento de erros e lógica de negócio
-│   │   ├── routes/         # Definição das rotas da API
-│   │   └── schemas/        # Schemas de validação de dados (Valibot)
-│   ├── middleware/         # Middlewares Fastify
-│   ├── plugins/            # Plugins Fastify
-│   ├── utils/              # Funções utilitárias
-│   ├── env.ts              # Variáveis de ambiente
-│   └── server.ts           # Ponto de entrada da aplicação e configuração do servidor
-├── tests/                  # Testes unitários e de integração
-├── docs/                   # Documentação do projeto (VitePress)
-├── drizzle.config.ts       # Configuração do Drizzle ORM
-├── package.json            # Dependências e scripts do projeto
-└── ...
+src/
+├── auth.ts             # Lógica de autenticação
+├── env.ts              # Variáveis de ambiente
+├── server.ts           # Configuração principal do servidor Fastify
+├── db/                 # Configuração do banco de dados e schemas Drizzle
+│   ├── connection.ts
+│   ├── drizzle/
+│   └── migrations/
+├── http/               # Definições de rotas, handlers e schemas da API
+│   ├── handlers/       # Funções de tratamento de erros e lógica de negócio
+│   ├── routes/         # Definição das rotas da API
+│   └── schemas/        # Schemas de validação de dados (Valibot)
+├── middleware/         # Middlewares Fastify
+├── plugins/            # Plugins Fastify
+└── utils/              # Funções utilitárias
 ```
 
 ## Como Usar esta Documentação

@@ -1,8 +1,8 @@
 # Tarefas
 
-Esta seção detalha os endpoints para gerenciamento de tarefas dos usuários, permitindo criar, listar, buscar, atualizar e deletar tarefas.
+Esta seção detalha os endpoints para gerenciamento de tarefas dos usuários, permitindo criar, listar, buscar, atualizar e deletar tarefas. Todos os endpoints requerem autenticação JWT.
 
-## `POST /tasks`
+## `POST /tasks/create`
 
 Cria uma nova tarefa para o usuário autenticado.
 
@@ -19,7 +19,7 @@ Cria uma nova tarefa para o usuário autenticado.
   ```
   *   `title` (string, obrigatório): Título da tarefa.
   *   `description` (string, opcional): Descrição da tarefa.
-  *   `status` (string, opcional): Status da tarefa (ex: `pending`, `completed`).
+  *   `status` (string, opcional): Status da tarefa (valores permitidos: `todo`, `in_progress`, `review`, `blocked`, `done`, `canceled`, `pending`). Padrão: `todo`.
 
 - **Respostas:**
   *   `201 Created`:
@@ -41,7 +41,7 @@ Cria uma nova tarefa para o usuário autenticado.
     }
     ```
 
-## `GET /tasks`
+## `GET /tasks/list`
 
 Lista todas as tarefas do usuário autenticado.
 
@@ -70,7 +70,7 @@ Lista todas as tarefas do usuário autenticado.
     }
     ```
 
-## `GET /tasks/:id`
+## `GET /tasks/get/:id`
 
 Busca uma tarefa específica pelo seu ID para o usuário autenticado.
 
@@ -106,7 +106,7 @@ Busca uma tarefa específica pelo seu ID para o usuário autenticado.
     }
     ```
 
-## `PUT /tasks/:id`
+## `PUT /tasks/update/:id`
 
 Atualiza uma tarefa existente pelo seu ID para o usuário autenticado.
 
@@ -126,7 +126,7 @@ Atualiza uma tarefa existente pelo seu ID para o usuário autenticado.
   ```
   *   `title` (string, opcional): Novo título da tarefa.
   *   `description` (string, opcional): Nova descrição da tarefa.
-  *   `status` (string, opcional): Novo status da tarefa.
+  *   `status` (string, opcional): Novo status da tarefa (valores permitidos: `todo`, `in_progress`, `review`, `blocked`, `done`, `canceled`, `pending`).
 
 - **Respostas:**
   *   `200 OK`:
@@ -154,7 +154,7 @@ Atualiza uma tarefa existente pelo seu ID para o usuário autenticado.
     }
     ```
 
-## `DELETE /tasks/:id`
+## `DELETE /tasks/delete/:id`
 
 Deleta uma tarefa existente pelo seu ID para o usuário autenticado.
 

@@ -1,13 +1,13 @@
 # Outlook
 
-Esta seção detalha os endpoints para interagir com o Outlook, permitindo listar mensagens e eventos do calendário.
+Esta seção detalha os endpoints para interagir com o Outlook, permitindo listar mensagens. Todos os endpoints requerem autenticação JWT.
 
-## `GET /outlook/messages/:id`
+## `GET /outlook/messages`
 
-Lista as mensagens do Outlook para um usuário específico.
+Lista as mensagens do Outlook para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Query Parameters:**
   *   `pageToken` (string, opcional): Token para a próxima página de resultados.
@@ -58,83 +58,6 @@ Lista as mensagens do Outlook para um usuário específico.
     ```json
     {
       "error": "Integração com Outlook não configurada" # ou "Falha ao acessar Outlook"
-    }
-    ```
-  *   `401 Unauthorized`:
-    ```json
-    {
-      "error": "Usuário não autenticado"
-    }
-    ```
-  *   `500 Internal Server Error`:
-    ```json
-    {
-      "error": "Erro interno do servidor"
-    }
-    ```
-
-## `GET /outlook/calendar/events/:id`
-
-Lista os eventos do Outlook Calendar para um usuário específico.
-
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
-
-- **Respostas:**
-  *   `200 OK`:
-    ```json
-    {
-      "@odata.context": "string",
-      "value": [
-        {
-          "@odata.etag": "string",
-          "id": "string",
-          "createdDateTime": "string" (ISO 8601),
-          "lastModifiedDateTime": "string" (ISO 8601),
-          "changeKey": "string",
-          "categories": [],
-          "transactionId": "string",
-          "originalStartTimeZone": "string",
-          "originalEndTimeZone": "string",
-          "iCalUId": "string",
-          "reminderMinutesBeforeStart": "number",
-          "isReminderOn": "boolean",
-          "hasAttachments": "boolean",
-          "subject": "string",
-          "bodyPreview": "string",
-          "importance": "string",
-          "sensitivity": "string",
-          "isAllDay": "boolean",
-          "isCancelled": "boolean",
-          "isOrganizer": "boolean",
-          "responseRequested": "boolean",
-          "seriesMasterId": "string",
-          "showAs": "string",
-          "type": "string",
-          "webLink": "string",
-          "onlineMeetingUrl": "string",
-          "isOnlineMeeting": "boolean",
-          "onlineMeetingProvider": "string",
-          "allowNewTimeProposals": "boolean",
-          "occurrenceId": "string",
-          "isSetAsTask": "boolean",
-          "recurrence": null,
-          "body": { "contentType": "string", "content": "string" },
-          "start": { "dateTime": "string" (ISO 8601), "timeZone": "string" },
-          "end": { "dateTime": "string" (ISO 8601), "timeZone": "string" },
-          "location": { "displayName": "string" },
-          "locations": [],
-          "attendees": [],
-          "organizer": { "emailAddress": { "name": "string", "address": "string" } },
-          "seriesMaster": null
-        }
-      ]
-    }
-    ```
-  *   `400 Bad Request`:
-    ```json
-    {
-      "error": "Integração com Outlook não configurada" # ou "Falha ao acessar Outlook Calendar"
     }
     ```
   *   `401 Unauthorized`:

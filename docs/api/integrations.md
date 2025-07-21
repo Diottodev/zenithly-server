@@ -1,13 +1,13 @@
 # Integrações
 
-Esta seção detalha os endpoints para gerenciar as integrações do usuário com serviços de terceiros, como Google (Calendar e Gmail) e Outlook.
+Esta seção detalha os endpoints para gerenciar as integrações do usuário com serviços de terceiros, como Google (Calendar e Gmail) e Outlook. Todos os endpoints requerem autenticação JWT.
 
-## `GET /integrations/status/:id`
+## `GET /integrations/status`
 
-Obtém o status atual das integrações de um usuário específico.
+Obtém o status atual das integrações do usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
   *   `200 OK`:
@@ -44,12 +44,12 @@ Obtém o status atual das integrações de um usuário específico.
     }
     ```
 
-## `GET /integrations/google/auth-url/:id`
+## `GET /integrations/google/auth-url`
 
-Obtém a URL de autorização do Google para iniciar o fluxo OAuth.
+Obtém a URL de autorização do Google para iniciar o fluxo OAuth para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (opcional, mas o usuário deve estar autenticado para que o `state` seja gerado corretamente)
 
 - **Respostas:**
   *   `200 OK`:
@@ -65,12 +65,12 @@ Obtém a URL de autorização do Google para iniciar o fluxo OAuth.
     }
     ```
 
-## `POST /integrations/google/callback/:id`
+## `POST /integrations/google/callback`
 
-Endpoint de callback para o Google OAuth. Recebe o código de autorização e troca por tokens de acesso e refresh.
+Endpoint de callback para o Google OAuth. Recebe o código de autorização e troca por tokens de acesso e refresh para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Corpo da Requisição:**
   ```json
@@ -110,12 +110,12 @@ Endpoint de callback para o Google OAuth. Recebe o código de autorização e tr
     }
     ```
 
-## `POST /integrations/outlook/callback/:id`
+## `POST /integrations/outlook/callback`
 
-Endpoint de callback para o Outlook OAuth. Recebe o código de autorização e troca por tokens de acesso e refresh.
+Endpoint de callback para o Outlook OAuth. Recebe o código de autorização e troca por tokens de acesso e refresh para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Corpo da Requisição:**
   ```json
@@ -155,12 +155,12 @@ Endpoint de callback para o Outlook OAuth. Recebe o código de autorização e t
     }
     ```
 
-## `GET /integrations/google/tokens/:id`
+## `GET /integrations/google/tokens`
 
-Obtém os tokens de acesso do Google para um usuário específico.
+Obtém os tokens de acesso do Google para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
   *   `200 OK`:
@@ -191,12 +191,12 @@ Obtém os tokens de acesso do Google para um usuário específico.
     }
     ```
 
-## `GET /integrations/google/refresh/:id`
+## `GET /integrations/google/refresh`
 
-Renova o token de acesso do Google usando o refresh token.
+Renova o token de acesso do Google usando o refresh token para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
   *   `200 OK`:
@@ -228,12 +228,12 @@ Renova o token de acesso do Google usando o refresh token.
     }
     ```
 
-## `GET /integrations/outlook/tokens/:id`
+## `GET /integrations/outlook/tokens`
 
-Obtém os tokens de acesso do Outlook para um usuário específico.
+Obtém os tokens de acesso do Outlook para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
   *   `200 OK`:
@@ -264,12 +264,12 @@ Obtém os tokens de acesso do Outlook para um usuário específico.
     }
     ```
 
-## `GET /integrations/outlook/refresh/:id`
+## `GET /integrations/outlook/refresh`
 
-Renova o token de acesso do Outlook usando o refresh token.
+Renova o token de acesso do Outlook usando o refresh token para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
   *   `200 OK`:
@@ -301,12 +301,12 @@ Renova o token de acesso do Outlook usando o refresh token.
     }
     ```
 
-## `GET /integrations/outlook/auth-url/:id`
+## `GET /integrations/outlook/auth-url`
 
-Obtém a URL de autorização do Outlook para iniciar o fluxo OAuth.
+Obtém a URL de autorização do Outlook para iniciar o fluxo OAuth para o usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (opcional, mas o usuário deve estar autenticado para que o `state` seja gerado corretamente)
 
 - **Respostas:**
   *   `200 OK`:

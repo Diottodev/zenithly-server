@@ -4,7 +4,7 @@ Este guia tem como objetivo auxiliar desenvolvedores frontend na integração co
 
 ## Visão Geral da API
 
-A API do Zenithly Server é uma API RESTful que utiliza JSON para troca de dados. Todas as requisições devem ser feitas para o endpoint base do servidor (definido pela variável de ambiente `FRONTEND_URL` no servidor, ou `http://localhost:3000` em desenvolvimento).
+A API do Zenithly Server é uma API RESTful que utiliza JSON para troca de dados. Todas as requisições devem ser feitas para o endpoint base do servidor (geralmente `http://localhost:3000` em desenvolvimento, ou o domínio configurado em produção).
 
 ### Autenticação
 
@@ -16,11 +16,13 @@ Exemplo de cabeçalho de autenticação:
 Authorization: Bearer <seu_token_jwt_aqui>
 ```
 
+Para mais detalhes sobre o fluxo de autenticação, consulte a seção [Autenticação da API](/api/auth).
+
 ### Estrutura de Requisições
 
 *   **Métodos HTTP:** Utilize os métodos HTTP padrão (GET, POST, PUT, DELETE) conforme a operação desejada.
 *   **Corpo da Requisição:** Para requisições `POST` e `PUT`, o corpo da requisição deve ser um objeto JSON com o cabeçalho `Content-Type: application/json`.
-*   **Parâmetros de Rota e Query:** Parâmetros de rota são indicados na URL (ex: `/users/:id`), enquanto parâmetros de query são adicionados após `?` (ex: `/users?page=1`).
+*   **Parâmetros de Rota e Query:** Parâmetros de rota são indicados na URL (ex: `/users/get`), enquanto parâmetros de query são adicionados após `?` (ex: `/integrations/status`).
 
 ### Respostas da API
 
@@ -28,5 +30,7 @@ As respostas da API geralmente seguem um padrão JSON, incluindo dados, mensagen
 
 ## Próximos Passos
 
-*   **Autenticação:** Entenda o fluxo de autenticação e como gerenciar tokens JWT.
-*   **Tratamento de Erros:** Saiba como lidar com os diferentes tipos de erros retornados pela API.
+*   **Autenticação:** Entenda o fluxo de autenticação e como gerenciar tokens JWT na seção [Autenticação da API](/api/auth).
+*   **Integrações:** Aprenda a integrar com serviços externos como Google e Outlook na seção [Integrações da API](/api/integrations).
+*   **Gerenciamento de Dados:** Explore os endpoints para gerenciar [Notas](/api/notes), [Senhas](/api/passwords) e [Tarefas](/api/tasks).
+*   **Tratamento de Erros:** Saiba como lidar com os diferentes tipos de erros retornados pela API (consulte a documentação de cada endpoint para detalhes específicos de erros).

@@ -1,73 +1,10 @@
 # Google Calendar
 
-Esta seção detalha os endpoints para interagir com o Google Calendar, permitindo listar, criar, atualizar e deletar eventos, além de listar calendários.
+Esta seção detalha os endpoints para interagir com o Google Calendar, permitindo listar, criar, atualizar e deletar eventos, além de listar calendários. Todos os endpoints requerem autenticação JWT.
 
-## `GET /google/calendar/events/:id`
+## `GET /google-calendar/events/list`
 
-Lista os eventos do Google Calendar para um usuário específico. Este endpoint é usado para listar eventos de um usuário cujo ID é passado como parâmetro de rota.
-
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
-
-- **Query Parameters:**
-  *   `pageToken` (string, opcional): Token para a próxima página de resultados.
-  *   `maxResults` (string, opcional): Número máximo de resultados a serem retornados (padrão: `100`).
-
-- **Respostas:**
-  *   `200 OK`:
-    ```json
-    {
-      "kind": "string",
-      "etag": "string",
-      "summary": "string",
-      "updated": "string" (ISO 8601),
-      "timeZone": "string",
-      "accessRole": "string",
-      "defaultReminders": [],
-      "nextPageToken": "string",
-      "items": [
-        {
-          "kind": "string",
-          "etag": "string",
-          "id": "string",
-          "status": "string",
-          "htmlLink": "string",
-          "created": "string" (ISO 8601),
-          "updated": "string" (ISO 8601),
-          "summary": "string",
-          "creator": { "email": "string" },
-          "organizer": { "email": "string" },
-          "start": { "dateTime": "string" (ISO 8601), "timeZone": "string" },
-          "end": { "dateTime": "string" (ISO 8601), "timeZone": "string" },
-          "iCalUID": "string",
-          "sequence": "number",
-          "reminders": { "useDefault": "boolean" }
-        }
-      ]
-    }
-    ```
-  *   `400 Bad Request`:
-    ```json
-    {
-      "error": "Integração com Google Calendar não configurada" # ou "Falha ao acessar Google Calendar"
-    }
-    ```
-  *   `401 Unauthorized`:
-    ```json
-    {
-      "error": "Usuário não autenticado"
-    }
-    ```
-  *   `500 Internal Server Error`:
-    ```json
-    {
-      "error": "Erro interno do servidor"
-    }
-    ```
-
-## `GET /google/calendar/events`
-
-Lista os eventos do Google Calendar para o usuário autenticado. Este endpoint requer autenticação JWT e usa o ID do usuário do token.
+Lista os eventos do Google Calendar para o usuário autenticado.
 
 - **Headers:**
   *   `Authorization`: `Bearer <token>` (obrigatório)
@@ -102,7 +39,7 @@ Lista os eventos do Google Calendar para o usuário autenticado. Este endpoint r
     }
     ```
 
-## `POST /google/calendar/events`
+## `POST /google-calendar/events/create`
 
 Cria um novo evento no Google Calendar para o usuário autenticado.
 
@@ -173,7 +110,7 @@ Cria um novo evento no Google Calendar para o usuário autenticado.
     }
     ```
 
-## `PUT /google/calendar/events/:eventId`
+## `PUT /google-calendar/events/update/:eventId`
 
 Atualiza um evento existente no Google Calendar para o usuário autenticado.
 
@@ -212,7 +149,7 @@ Atualiza um evento existente no Google Calendar para o usuário autenticado.
     }
   }
   ```
-  *   Os campos são os mesmos do `POST /google/calendar/events`, mas todos são opcionais para atualização parcial.
+  *   Os campos são os mesmos do `POST /google-calendar/events/create`, mas todos são opcionais para atualização parcial.
 
 - **Respostas:**
   *   `200 OK`:
@@ -242,7 +179,7 @@ Atualiza um evento existente no Google Calendar para o usuário autenticado.
     }
     ```
 
-## `DELETE /google/calendar/events/:eventId`
+## `DELETE /google-calendar/events/delete/:eventId`
 
 Deleta um evento do Google Calendar para o usuário autenticado.
 
@@ -261,7 +198,7 @@ Deleta um evento do Google Calendar para o usuário autenticado.
     }
     ```
 
-## `GET /google/calendar/calendars`
+## `GET /google-calendar/calendars/list`
 
 Lista os calendários do Google Calendar do usuário autenticado, incluindo informações de cores.
 

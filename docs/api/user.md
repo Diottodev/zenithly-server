@@ -1,59 +1,13 @@
 # Usuários
 
-Esta seção detalha os endpoints para gerenciamento de usuários no Zenithly Server, incluindo listagem, busca por ID, atualização e exclusão de usuários.
+Esta seção detalha os endpoints para gerenciamento do usuário autenticado no Zenithly Server, incluindo busca, atualização e exclusão do próprio perfil.
 
-## `GET /users`
+## `GET /users/get`
 
-Lista todos os usuários com suporte a paginação e filtros de busca.
+Busca as informações do usuário autenticado.
 
-- **Query Parameters:**
-  *   `page` (number, opcional): Número da página (padrão: `1`).
-  *   `limit` (number, opcional): Limite de usuários por página (padrão: `10`).
-  *   `search` (string, opcional): Termo de busca para nome ou email do usuário.
-  *   `role` (string, opcional): Filtra usuários por função (ex: `admin`, `user`).
-
-- **Respostas:**
-  *   `200 OK`:
-    ```json
-    {
-      "users": [
-        {
-          "id": "string",
-          "name": "string",
-          "email": "string",
-          "emailVerified": "boolean",
-          "image": "string | null",
-          "role": "string",
-          "createdAt": "string" (ISO 8601),
-          "updatedAt": "string" (ISO 8601),
-          "hasCompletedOnboarding": "boolean",
-          "onboardingStep": "string | null"
-        }
-      ],
-      "pagination": {
-        "page": "number",
-        "limit": "number",
-        "total": "number",
-        "totalPages": "number",
-        "hasNext": "boolean",
-        "hasPrev": "boolean"
-      }
-    }
-    ```
-  *   `500 Internal Server Error`:
-    ```json
-    {
-      "error": "Erro interno do servidor",
-      "message": "Não foi possível buscar os usuários"
-    }
-    ```
-
-## `GET /users/:id`
-
-Busca um usuário específico pelo seu ID.
-
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
   *   `200 OK`:
@@ -88,12 +42,12 @@ Busca um usuário específico pelo seu ID.
     }
     ```
 
-## `PUT /users/:id`
+## `PUT /users/update`
 
-Atualiza as informações de um usuário existente pelo seu ID.
+Atualiza as informações do usuário autenticado.
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário a ser atualizado.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Corpo da Requisição:**
   ```json
@@ -101,7 +55,6 @@ Atualiza as informações de um usuário existente pelo seu ID.
     "name"?: "string",
     "email"?: "string",
     "image"?: "string",
-    "role"?: "string",
     "hasCompletedOnboarding"?: "boolean",
     "onboardingStep"?: "string"
   }
@@ -109,7 +62,6 @@ Atualiza as informações de um usuário existente pelo seu ID.
   *   `name` (string, opcional): Novo nome do usuário (mínimo 2 caracteres).
   *   `email` (string, opcional): Novo email do usuário (formato de email válido).
   *   `image` (string, opcional): URL da imagem do perfil do usuário.
-  *   `role` (string, opcional): Nova função do usuário.
   *   `hasCompletedOnboarding` (boolean, opcional): Indica se o usuário completou o onboarding.
   *   `onboardingStep` (string, opcional): Passo atual do onboarding do usuário.
 
@@ -143,20 +95,15 @@ Atualiza as informações de um usuário existente pelo seu ID.
     }
     ```
 
-## `DELETE /users/:id`
+## `DELETE /users/delete`
 
-Deleta um usuário existente pelo seu ID. Esta operação também remove dados relacionados ao usuário (contas, sessões, progresso de tutorial, integrações).
+Deleta o usuário autenticado. Esta operação também remove dados relacionados ao usuário (contas, sessões, progresso de tutorial, integrações).
 
-- **Parâmetros de Rota:**
-  *   `id` (string, obrigatório): O ID único do usuário a ser deletado.
+- **Headers:**
+  *   `Authorization`: `Bearer <token>` (obrigatório)
 
 - **Respostas:**
-  *   `200 OK`:
-    ```json
-    {
-      "message": "Usuário deletado com sucesso"
-    }
-    ```
+  *   `204 No Content`
   *   `404 Not Found`:
     ```json
     {
