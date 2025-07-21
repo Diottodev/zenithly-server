@@ -172,7 +172,7 @@ export function authRoutes(app: FastifyInstance) {
       const githubResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'github',
-          callbackURL: `${env.BETTER_AUTH_URL}/${env.VERSION}/auth/callback`,
+          callbackURL: `${env.BETTER_AUTH_URL}/${env.VERSION}/api/auth/callback`,
         },
       });
       if (!githubResult?.url) {
@@ -200,7 +200,7 @@ export function authRoutes(app: FastifyInstance) {
       const googleResult = await app.betterAuth.api.signInSocial({
         body: {
           provider: 'google',
-          callbackURL: `${env.BETTER_AUTH_URL}/${env.VERSION}/auth/callback`,
+          callbackURL: `${env.BETTER_AUTH_URL}/${env.VERSION}/api/auth/callback`,
         },
       });
       if (!googleResult?.url) {
