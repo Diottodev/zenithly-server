@@ -2,13 +2,12 @@ import { and, eq } from 'drizzle-orm';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { tasks } from '../../db/drizzle/tasks.ts';
-import {
-  type CreateTaskBody,
-  createTaskSchema,
-  type TaskParams,
-  type UpdateTaskBody,
-  updateTaskSchema,
-} from '../schemas/tasks.ts';
+import type {
+  TCreateTask,
+  TRouteParams,
+  TUpdateTask,
+} from '../schemas/index.ts';
+import { createTaskSchema, updateTaskSchema } from '../schemas/tasks.ts';
 
 const allowedStatus = [
   'todo',
@@ -17,9 +16,8 @@ const allowedStatus = [
   'blocked',
   'done',
   'canceled',
-  'pendind'
+  'pendind',
 ] as const;
-
 
 export function taskRoutes(app: FastifyInstance) {
   app.post(
@@ -30,16 +28,19 @@ export function taskRoutes(app: FastifyInstance) {
       },
     },
     async (request: FastifyRequest, reply) => {
-      const { title, description, status } = request.body as CreateTaskBody;
+      const { title, description, status } = request.body as TCreateTask;
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
       try {
-        const [task] = await db.insert(tasks).values({
-          title,
-          description,
-          status: status as typeof allowedStatus[number] || 'todo',
-          userId,
-        }).returning();
+        const [task] = await db
+          .insert(tasks)
+          .values({
+            title,
+            description,
+            status: (status as (typeof allowedStatus)[number]) || 'todo',
+            userId,
+          })
+          .returning();
         return reply.code(201).send(task);
       } catch (error) {
         app.log.error(error, 'Error creating task');
@@ -66,7 +67,7 @@ export function taskRoutes(app: FastifyInstance) {
   app.get('/get/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
-    const { id } = request.params as TaskParams;
+    const { id } = request.params as TRouteParams;
     try {
       const [task] = await db
         .select()
@@ -91,12 +92,17 @@ export function taskRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
-      const { id } = request.params as TaskParams;
-      const { title, description, status } = request.body as UpdateTaskBody;
+      const { id } = request.params as TRouteParams;
+      const { title, description, status } = request.body as TUpdateTask;
       try {
         const [updatedTask] = await db
           .update(tasks)
-          .set({ title, description, status: status as typeof allowedStatus[number] || 'todo', updatedAt: new Date() })
+          .set({
+            title,
+            description,
+            status: (status as (typeof allowedStatus)[number]) || 'todo',
+            updatedAt: new Date(),
+          })
           .where(and(eq(tasks.id, id), eq(tasks.userId, userId)))
           .returning();
         if (!updatedTask) {
@@ -112,7 +118,7 @@ export function taskRoutes(app: FastifyInstance) {
   app.delete('/delete/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
-    const { id } = request.params as TaskParams;
+    const { id } = request.params as TRouteParams;
     try {
       const [deletedTask] = await db
         .delete(tasks)

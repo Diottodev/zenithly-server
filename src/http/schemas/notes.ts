@@ -17,8 +17,5 @@ export const updateNoteSchema = object({
   content: optional(pipe(string(), minLength(1, 'O conteúdo é obrigatório'))),
 });
 
-export type CreateNoteBody = InferInput<typeof createNoteSchema>;
-export type UpdateNoteBody = InferInput<typeof updateNoteSchema>;
-export type NoteParams = {
-  id: string;
-};
+export type TCreateNote = InferInput<typeof createNoteSchema>;
+export type TUpdateNote = InferInput<typeof updateNoteSchema>;

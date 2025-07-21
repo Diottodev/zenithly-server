@@ -31,12 +31,9 @@ export const updateTaskSchema = object({
   status: optional(taskStatusEnum),
 });
 
-export type TaskParams = {
-  id: string;
-};
-export type CreateTaskBody = InferInput<typeof createTaskSchema>;
-export type UpdateTaskBody = InferInput<typeof updateTaskSchema>;
-export type TaskStatus =
+export type TCreateTask = InferInput<typeof createTaskSchema>;
+export type TUpdateTask = InferInput<typeof updateTaskSchema>;
+export type TStatusEnum =
   | 'todo'
   | 'pending'
   | 'in_progress'
