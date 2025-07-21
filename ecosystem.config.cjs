@@ -7,6 +7,7 @@ module.exports = {
       cwd: '/home/ubuntu/zenithly-server',
       script: 'yarn',
       args: 'start',
+      interpreter: "none",
       exec_mode: 'fork',
       instances: 1,
       watch: false,
@@ -53,7 +54,6 @@ module.exports = {
         FRONTEND_URL: process.env.FRONTEND_URL,
         CORS_ORIGIN: process.env.CORS_ORIGIN,
         API_URL: process.env.API_URL || 'http://localhost:8080',
-
         PATH: `${process.env.PATH}:/home/ubuntu/zenithly-server/node_modules/.bin`,
       },
     },
@@ -62,6 +62,7 @@ module.exports = {
       cwd: '/home/ubuntu/zenithly-server',
       script: 'yarn',
       args: 'docs:start',
+      interpreter: "none",
       exec_mode: 'fork',
       instances: 1,
       watch: false,
