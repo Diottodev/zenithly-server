@@ -15,7 +15,7 @@ import {
 
 export function passwordRoutes(app: FastifyInstance) {
   app.post(
-    '/passwords',
+    '/create',
     {
       schema: {
         body: createPasswordSchema,
@@ -40,7 +40,7 @@ export function passwordRoutes(app: FastifyInstance) {
       }
     }
   );
-  app.get('/passwords', async (request, reply) => {
+  app.get('/list', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
     try {
@@ -55,7 +55,7 @@ export function passwordRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get('/passwords/:id', async (request, reply) => {
+  app.get('/get/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
     const { id } = request.params as TRouteParams;
@@ -74,7 +74,7 @@ export function passwordRoutes(app: FastifyInstance) {
     }
   });
   app.put(
-    '/passwords/:id',
+    '/update/:id',
     {
       schema: {
         body: updatePasswordSchema,
@@ -111,7 +111,7 @@ export function passwordRoutes(app: FastifyInstance) {
       }
     }
   );
-  app.delete('/passwords/:id', async (request, reply) => {
+  app.delete('/delete/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
     const { id } = request.params as TRouteParams;
