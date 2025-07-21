@@ -8,6 +8,27 @@
       "when": 1752444778623,
       "tag": "0000_tricky_echo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1753111627478,
+      "tag": "0001_mighty_marauders",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753112588535,
+      "tag": "0002_minor_phantom_reporter",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1753113252519,
+      "tag": "0003_secret_lethal_legion",
+      "breakpoints": true
     }
   ]
 }
