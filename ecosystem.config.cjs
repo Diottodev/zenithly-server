@@ -1,11 +1,12 @@
 'use strict';
+
 module.exports = {
   apps: [
     {
       name: 'zenithly-server',
+      cwd: '/home/ubuntu/zenithly-server',
       script: 'yarn',
       args: 'start',
-      interpreter: 'none',
       exec_mode: 'fork',
       instances: 1,
       watch: false,
@@ -30,10 +31,11 @@ module.exports = {
         FRONTEND_URL: process.env.FRONTEND_URL,
         CORS_ORIGIN: process.env.CORS_ORIGIN,
         API_URL: process.env.API_URL || 'http://localhost:8080',
+        PATH: `${process.env.PATH}:/home/ubuntu/zenithly-server/node_modules/.bin`,
       },
       env_production: {
-        VERSION: process.env.npm_package_version || 'v1',
         NODE_ENV: process.env.NODE_ENV || 'production',
+        VERSION: process.env.npm_package_version || 'v1',
         PORT: process.env.PORT || 8080,
         DATABASE_URL: process.env.DATABASE_URL,
         JWT_SECRET: process.env.JWT_SECRET,
@@ -51,23 +53,27 @@ module.exports = {
         FRONTEND_URL: process.env.FRONTEND_URL,
         CORS_ORIGIN: process.env.CORS_ORIGIN,
         API_URL: process.env.API_URL || 'http://localhost:8080',
+
+        PATH: `${process.env.PATH}:/home/ubuntu/zenithly-server/node_modules/.bin`,
       },
     },
     {
       name: 'zenithly-docs',
+      cwd: '/home/ubuntu/zenithly-server',
       script: 'yarn',
       args: 'docs:start',
-      interpreter: 'none',
       exec_mode: 'fork',
       instances: 1,
       watch: false,
       env: {
         NODE_ENV: process.env.NODE_ENV || 'production',
         DOCS_PORT: process.env.DOCS_PORT || 5050,
+        PATH: `${process.env.PATH}:/home/ubuntu/zenithly-server/node_modules/.bin`,
       },
       env_production: {
         NODE_ENV: process.env.NODE_ENV || 'production',
         DOCS_PORT: process.env.DOCS_PORT || 5050,
+        PATH: `${process.env.PATH}:/home/ubuntu/zenithly-server/node_modules/.bin`,
       },
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       error_file: './logs/pm2-error.log',
