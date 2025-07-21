@@ -85,9 +85,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            export PATH="$HOME/.local/share/yarn:$PATH"
+            export PATH="$HOME/.yarn/bin:$PATH"
 
-            # Se usa nvm, carregue ele:
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
