@@ -1,10 +1,14 @@
 import fp from 'fastify-plugin';
 import { auth } from '../auth.ts';
 import { env } from '../env.ts';
+import { extractSessionToken } from '../utils/extract-session-token.ts';
 
 declare module 'fastify' {
   interface FastifyInstance {
     betterAuth: typeof auth;
+  }
+  interface FastifyRequest {
+    user: string | object | Buffer;
   }
 }
 
@@ -20,8 +24,7 @@ export default fp((fastify, _opts, done) => {
   });
   // Register the auth handler for API routes
   fastify.register((app) => {
-    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: OAuth flow requires complex logic
-    app.all('/api/auth/*', async (request, reply) => {
+    app.all(`/${env.VERSION}/api/auth/*`, async (request, reply) => {
       app.log.info(`Better Auth request: ${request.method} ${request.url}`);
       // Garantir headers CORS para todas as requisições de auth
       reply.header(
@@ -37,12 +40,10 @@ export default fp((fastify, _opts, done) => {
         'Access-Control-Allow-Headers',
         'Content-Type, Authorization, Cookie'
       );
-
       // Handle preflight requests
       if (request.method === 'OPTIONS') {
         return reply.code(200).send();
       }
-
       const url = new URL(request.url, `http://${request.headers.host}`);
       // Preparar headers, incluindo cookies
       const headers = new Headers();
@@ -86,7 +87,6 @@ export default fp((fastify, _opts, done) => {
             .code(response.status)
             .send(body ? JSON.parse(body) : undefined);
         }
-
         const body = await response.text();
         return reply
           .code(response.status)
@@ -100,6 +100,42 @@ export default fp((fastify, _opts, done) => {
         });
       }
     });
+  });
+  // Pre-handler hook to set request.user for all routes
+  fastify.addHook('preHandler', async (request, _reply) => {
+    if (request.url.startsWith('/api/auth')) {
+      return; // Auth routes handle their own authentication
+    }
+    try {
+      const sessionToken = request.headers.authorization?.replace(
+        'Bearer ',
+        ''
+      );
+      const sessionTokenFromCookie = extractSessionToken({
+        cookie: request.headers.cookie,
+      });
+      const token = sessionToken
+        ? sessionToken
+        : sessionTokenFromCookie || undefined;
+      if (token) {
+        const sessionData = await auth.api.getSession({
+          headers: new Headers({
+            authorization: `Bearer ${token}`,
+            ...(sessionTokenFromCookie
+              ? {
+                cookie: `__Secure-better-auth.session_token=${sessionTokenFromCookie}`,
+              }
+              : {}),
+          }),
+        });
+        if (sessionData?.user) {
+          request.user = { sub: sessionData.user.id };
+        }
+      }
+    } catch (error) {
+      fastify.log.error(error, 'Error in preHandler hook');
+      // Do not block the request, just don't set request.user
+    }
   });
   done();
 });
