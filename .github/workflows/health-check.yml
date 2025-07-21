@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: Check API Health
         run: |
-          API_URL="${{ secrets.API_URL || 'https://api.zenithly.com' }}"
-          echo "🔍 Checking API health at: $API_URL"
-          response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health || echo "000")
+          API_URL="https://api.zenithly.diotto.dev/v1/api/health"
+          echo "🔍 Checking API health at: https://api.zenithly.diotto.dev/v1/api/"
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://api.zenithly.diotto.dev/v1/api/health || echo "000")
           if [ "$response" -eq 200 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
