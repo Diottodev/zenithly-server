@@ -3,8 +3,9 @@ module.exports = {
   apps: [
     {
       name: 'zenithly-server',
-      script: 'src/server.ts',
-      interpreter: 'tsx',
+      script: 'pnpm',
+      args: 'start',
+      interpreter: 'none',
       exec_mode: 'fork',
       instances: 1,
       watch: false,
@@ -54,11 +55,11 @@ module.exports = {
     },
     {
       name: 'zenithly-docs',
-      script: 'npx',
-      args: 'vitepress serve docs --port 5050',
+      script: 'pnpm',
+      args: 'docs:start',
+      interpreter: 'none',
       exec_mode: 'fork',
       instances: 1,
-      interpreter: 'none',
       watch: false,
       env: {
         NODE_ENV: process.env.NODE_ENV || 'production',
