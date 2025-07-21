@@ -1,7 +1,6 @@
-import type { FastifyInstance } from "fastify";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createApp } from "../../src/server";
-
+import type { FastifyInstance } from 'fastify';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { createApp } from '../../src/server';
 
 describe('Gmail Routes', () => {
   let app: FastifyInstance;
