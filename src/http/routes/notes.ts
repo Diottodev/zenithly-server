@@ -1,16 +1,14 @@
 import { and, eq } from 'drizzle-orm';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
-import type { InferInput } from 'valibot';
 import { db } from '../../db/connection.ts';
 import { notes } from '../../db/drizzle/notes.ts';
-import { createNoteSchema, updateNoteSchema } from '../schemas/notes.ts';
-
-interface NoteIdParams {
-  id: string;
-}
-
-type CreateNoteBody = InferInput<typeof createNoteSchema>;
-type UpdateNoteBody = InferInput<typeof updateNoteSchema>;
+import {
+  type CreateNoteBody,
+  createNoteSchema,
+  type NoteParams,
+  type UpdateNoteBody,
+  updateNoteSchema,
+} from '../schemas/notes.ts';
 
 export function noteRoutes(app: FastifyInstance) {
   app.post(
@@ -57,7 +55,7 @@ export function noteRoutes(app: FastifyInstance) {
   app.get('/get/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
-    const { id } = request.params as NoteIdParams;
+    const { id } = request.params as NoteParams;
     try {
       const [note] = await db
         .select()
@@ -84,7 +82,7 @@ export function noteRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const userId = (request as FastifyRequest & { user: { sub: string } })
         .user.sub;
-      const { id } = request.params as NoteIdParams;
+      const { id } = request.params as NoteParams;
       const { title, content } = request.body as UpdateNoteBody;
       try {
         const [updatedNote] = await db
@@ -105,7 +103,7 @@ export function noteRoutes(app: FastifyInstance) {
   app.delete('/delete/:id', async (request, reply) => {
     const userId = (request as FastifyRequest & { user: { sub: string } }).user
       .sub;
-    const { id } = request.params as NoteIdParams;
+    const { id } = request.params as NoteParams;
     try {
       const [deletedNote] = await db
         .delete(notes)
