@@ -11,6 +11,7 @@ module.exports = {
       max_memory_restart: '1G',
       env: {
         NODE_ENV: process.env.NODE_ENV || 'production',
+        VERSION: process.env.npm_package_version || 'v1',
         PORT: process.env.PORT || 8080,
         DATABASE_URL: process.env.DATABASE_URL,
         JWT_SECRET: process.env.JWT_SECRET,
@@ -30,6 +31,7 @@ module.exports = {
         API_URL: process.env.API_URL || 'http://localhost:8080',
       },
       env_production: {
+        VERSION: process.env.npm_package_version || 'v1',
         NODE_ENV: process.env.NODE_ENV || 'production',
         PORT: process.env.PORT || 8080,
         DATABASE_URL: process.env.DATABASE_URL,
