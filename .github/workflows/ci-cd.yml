@@ -104,7 +104,9 @@ jobs:
             git pull origin master
 
             # Carregar variáveis de ambiente
-            export $(grep -v '^#' .env | xargs)
+            set -a
+            . .env
+            set +a
 
             # Instalar dependências
             pnpm install --frozen-lockfile
@@ -113,7 +115,9 @@ jobs:
             pnpm db:migrate
 
             # Reiniciar app no PM2
-            pm2 reload ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production
+            pm2 delete zenithly-server || true
+            pm2 delete zenithly-docs || true
+            pm2 start ecosystem.config.cjs --env production
 
             # Mostrar status PM2
             pm2 status
