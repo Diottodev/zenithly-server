@@ -52,10 +52,10 @@ export const refreshTokenSchema = v.object({
   ]),
 });
 
-export type GoogleAuth = v.InferOutput<typeof googleAuthSchema>;
-export type OutlookAuth = v.InferOutput<typeof outlookAuthSchema>;
-export type IntegrationToggle = v.InferOutput<typeof integrationToggleSchema>;
-export type IntegrationSettings = v.InferOutput<
+export type TGoogleAuth = v.InferOutput<typeof googleAuthSchema>;
+export type TOutlookAuth = v.InferOutput<typeof outlookAuthSchema>;
+export type TIntegrationToggle = v.InferOutput<typeof integrationToggleSchema>;
+export type TIntegrationSettings = v.InferOutput<
   typeof integrationSettingsSchema
 >;
-export type RefreshToken = v.InferOutput<typeof refreshTokenSchema>;
+export type TRefreshToken = v.InferOutput<typeof refreshTokenSchema>;

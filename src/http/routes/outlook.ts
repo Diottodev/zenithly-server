@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { db } from '../../db/connection.ts';
 import { schema } from '../../db/drizzle/index.ts';
-import { userParamsSchema } from '../schemas/user-routes.schema.ts';
+import { userParamsSchema } from '../schemas/user.ts';
 
 export function outlookRoutes(app: FastifyInstance) {
   // GET /outlook/messages - Listar mensagens do Outlook
