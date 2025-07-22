@@ -102,6 +102,6 @@ jobs:
 
             yarn db:migrate
 
-            pm2 start ecosystem.config.cjs --env production --update-env
+            docker compose up -d --build
 
-            pm2 status
+            docker compose ps

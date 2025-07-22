@@ -33,12 +33,9 @@ jobs:
           port: ${{ secrets.EC2_PORT || 22 }}
           script: |
             echo "🔍 Checking PM2 status..."
-            pm2 status
             echo "📝 Last 100 lines of logs:"
-            pm2 logs zenithly-server --lines 100
             echo "🔄 Attempting to restart application..."
-            pm2 restart zenithly-server
-
+      # PM2 removido. Adicione aqui comandos de healthcheck para Docker se necessário.
       - name: Send Discord notification on failure
         if: failure()
         uses: sarisia/actions-status-discord@v1

@@ -12,7 +12,7 @@ on:
           - production
           - staging
       restart_only:
-        description: "Only restart PM2 without pulling code"
+        description: "Deploy usando Docker Compose"
         required: false
         default: false
         type: boolean
@@ -49,8 +49,8 @@ jobs:
             cd $APP_PATH
 
             if [ "${{ github.event.inputs.restart_only }}" == "true" ]; then
-              echo "🔄 Restarting PM2 application only..."
-              pm2 restart zenithly-server
+              echo "🔄 Reiniciando containers Docker..."
+              docker compose restart
             else
               echo "📦 Pulling latest changes..."
               git pull origin master
@@ -61,13 +61,16 @@ jobs:
               echo "🗄️ Running database migrations..."
               yarn db:migrate
               
-              echo "🔄 Restarting PM2 application..."
-              pm2 restart zenithly-server || pm2 start ecosystem.config.js
+              echo "🔄 Reiniciando containers Docker..."
+              docker compose restart
             fi
 
             echo "✅ Deployment completed!"
-            echo "📊 PM2 Status:"
-            pm2 status
+            echo "📊 Status dos containers Docker:"
+            docker compose ps
 
-            echo "📝 PM2 Logs (last 50 lines):"
-            pm2 logs zenithly-server --lines 50
+            echo "🩺 Health check dos containers Docker:"
+            docker compose ps | grep -E 'Up|healthy' || (echo '❌ Um ou mais containers não estão rodando corretamente!' && exit 1)
+
+            echo "📝 Logs da API (últimas 50 linhas):"
+            docker compose logs --tail=50 api

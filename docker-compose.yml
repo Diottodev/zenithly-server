@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -18,6 +20,28 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  api:
+    build: .
+    container_name: zenithly-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/zenithly
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    command: ["yarn", "start"]
+
+  docs:
+    build:
+      context: ./docs
+    container_name: zenithly-docs
+    restart: unless-stopped
+    ports:
+      - "5050:5050"
+    command: ["yarn", "docs:start"]
 
 volumes:
   postgres_data:
