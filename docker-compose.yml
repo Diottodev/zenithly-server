@@ -23,9 +23,8 @@ services:
     build: .
     container_name: zenithly-api
     restart: unless-stopped
-    environment:
-      NODE_ENV: production
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/zenithly
+    env_file:
+      - .env
     depends_on:
       - postgres
     ports:
@@ -40,6 +39,7 @@ services:
     restart: unless-stopped
     ports:
       - "5050:5050"
+    command: ["serve", "./dist", "-l", "5050"]
 
 volumes:
   postgres_data:
