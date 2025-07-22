@@ -35,6 +35,7 @@ services:
   docs:
     build:
       context: ./docs
+      dockerfile: Dockerfile
     container_name: zenithly-docs
     restart: unless-stopped
     ports:
