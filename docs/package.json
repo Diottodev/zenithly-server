@@ -1,5 +1,6 @@
 {
   "name": "zenithly-docs",
+  "type": "module",
   "private": true,
   "scripts": {
     "docs:build": "vitepress build",

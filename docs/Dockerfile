@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 COPY . ./
-RUN yarn install --frozen-lockfile || npm ci
+RUN yarn install --frozen-lockfile
 RUN yarn docs:build
 
 FROM node:20-alpine
