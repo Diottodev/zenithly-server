@@ -7,7 +7,7 @@ export function outlookCalendarRoutes(app: FastifyInstance) {
   // GET /outlook/calendar/events/list - Listar eventos do Outlook Calendar
   app.get('/calendar/events/list', async (request, reply) => {
     try {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }

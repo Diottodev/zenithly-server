@@ -22,7 +22,7 @@ export function outlookRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const userId = (request.user as { user: { sub: string } }).user.sub;
+        const userId = (request as { user: { sub: string } }).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }

@@ -99,7 +99,7 @@ export function integrationsRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { code } = request.body;
-        const userId = (request.user as { user: { sub: string } }).user.sub;
+        const userId = (request as { user: { sub: string } }).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }
@@ -200,7 +200,7 @@ export function integrationsRoutes(app: FastifyInstance) {
     async (request, reply) => {
       try {
         const { code } = request.body;
-        const userId = (request.user as { user: { sub: string } }).user.sub;
+        const userId = (request as { user: { sub: string } }).user.sub;
         if (!userId) {
           return reply.status(401).send({ error: 'Usuário não autenticado' });
         }
@@ -278,7 +278,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/google/tokens - Obter tokens do Google
   app.get('/google/tokens', async (request, reply) => {
     try {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -322,7 +322,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/google/refresh - Refresh token do Google
   app.get('/google/refresh', async (request, reply) => {
     try {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -397,7 +397,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/outlook/tokens - Obter tokens do Outlook
   app.get('/outlook/tokens', async (request, reply) => {
     try {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }
@@ -438,7 +438,7 @@ export function integrationsRoutes(app: FastifyInstance) {
   // GET /integrations/outlook/refresh - Refresh token do Outlook
   app.get('/outlook/refresh', async (request, reply) => {
     try {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       if (!userId) {
         return reply.status(401).send({ error: 'Usuário não autenticado' });
       }

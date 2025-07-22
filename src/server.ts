@@ -16,7 +16,7 @@ import { userRoutes } from './http/routes/user.ts';
 import betterAuthPlugin from './plugins/better-auth.plugin.ts';
 
 export function createApp() {
-  const app = fastify({ logger: true });
+  const app = fastify({ logger: false });
   app.addContentTypeParser(
     'application/x-www-form-urlencoded',
     (_request, payload, done) => {

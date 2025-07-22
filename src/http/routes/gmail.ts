@@ -43,11 +43,58 @@ export function gmailRoutes(app: FastifyInstance) {
 
   // GET /gmail/messages - List messages
   app.get('/messages', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     try {
       const gmail = await getGmailClient(userId);
-      const res = await gmail.users.messages.list({ userId: 'me' });
-      return reply.code(200).send(res.data.messages);
+      const res = await gmail.users.messages.list({
+        userId: 'me',
+        maxResults: 200,
+      });
+      const messages = res.data.messages || [];
+      // Buscar apenas os headers de todas as mensagens (From, To, Subject)
+      const details = await Promise.all(
+        messages.map(async (msg) => {
+          if (!msg.id) {
+            return null;
+          }
+          const msgRes = await gmail.users.messages.get({
+            userId: 'me',
+            id: msg.id,
+            format: 'metadata',
+            metadataHeaders: ['From', 'To', 'Subject'],
+          });
+          const { id, threadId, snippet, internalDate, labelIds, payload } =
+            msgRes.data;
+          let from = '';
+          let to = '';
+          let subject = '';
+          if (payload?.headers) {
+            for (const h of payload.headers) {
+              const name = h.name?.toLowerCase();
+              if (name === 'from') {
+                from = h.value as string;
+              }
+              if (name === 'to') {
+                to = h.value as string;
+              }
+              if (name === 'subject') {
+                subject = h.value as string;
+              }
+            }
+          }
+          return {
+            id,
+            threadId,
+            snippet,
+            internalDate,
+            labelIds,
+            from,
+            to,
+            subject,
+          };
+        })
+      );
+      return reply.code(200).send(details.filter(Boolean));
     } catch (error) {
       app.log.error(error, 'Error listing Gmail messages');
       return reply.code(500).send({ message: 'Internal server error' });
@@ -55,7 +102,7 @@ export function gmailRoutes(app: FastifyInstance) {
   });
   // GET /gmail/messages/:messageId - Get message details
   app.get('/messages/:messageId', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     const { messageId } = request.params as { messageId: string };
     try {
       const gmail = await getGmailClient(userId);
@@ -78,7 +125,7 @@ export function gmailRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       const { to, subject, body } = request.body as TSendGmail;
       try {
         const gmail = await getGmailClient(userId);

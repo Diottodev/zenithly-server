@@ -29,7 +29,7 @@ export function taskRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { title, description, status } = request.body as TCreateTask;
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       try {
         const [task] = await db
           .insert(tasks)
@@ -48,7 +48,7 @@ export function taskRoutes(app: FastifyInstance) {
     }
   );
   app.get('/list', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     try {
       const userTasks = await db
         .select()
@@ -63,7 +63,7 @@ export function taskRoutes(app: FastifyInstance) {
   });
 
   app.get('/get/:id', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     const { id } = request.params as TRouteParams;
     try {
       const [task] = await db
@@ -87,7 +87,7 @@ export function taskRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       const { id } = request.params as TRouteParams;
       const { title, description, status } = request.body as TUpdateTask;
       try {
@@ -112,7 +112,7 @@ export function taskRoutes(app: FastifyInstance) {
     }
   );
   app.delete('/delete/:id', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     const { id } = request.params as TRouteParams;
     try {
       const [deletedTask] = await db

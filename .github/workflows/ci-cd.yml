@@ -98,7 +98,7 @@ jobs:
             . .env
             set +a
 
-            yarn install --frozen-lockfile
+            yarn install
 
             yarn db:migrate
 

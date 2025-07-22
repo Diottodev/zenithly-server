@@ -23,7 +23,7 @@ export function passwordRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { service, username, password } = request.body as TCreatePassword;
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const [newPassword] = await db
@@ -39,7 +39,7 @@ export function passwordRoutes(app: FastifyInstance) {
     }
   );
   app.get('/list', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     try {
       const userPasswords = await db
         .select()
@@ -53,7 +53,7 @@ export function passwordRoutes(app: FastifyInstance) {
   });
 
   app.get('/get/:id', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     const { id } = request.params as TRouteParams;
     try {
       const [password] = await db
@@ -77,7 +77,7 @@ export function passwordRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       const { id } = request.params as TRouteParams;
       const { service, username, password } = request.body as TUpdatePassword;
       try {
@@ -106,7 +106,7 @@ export function passwordRoutes(app: FastifyInstance) {
     }
   );
   app.delete('/delete/:id', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     const { id } = request.params as TRouteParams;
     try {
       const [deletedPassword] = await db

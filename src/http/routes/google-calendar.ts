@@ -49,17 +49,56 @@ export function googleCalendarRoutes(app: FastifyInstance) {
   };
   // GET /google/calendar/events - List events
   app.get('/events/list', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     try {
       const calendar = await getCalendarClient(userId);
-      const res = await calendar.events.list({
-        calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-      });
-      return reply.code(200).send(res.data.items);
+      const now = new Date();
+      const year = now.getFullYear();
+      const timeMin = new Date(year, 0, 1, 0, 0, 0, 0).toISOString();
+      const timeMax = new Date(year, 11, 31, 23, 59, 59, 999).toISOString();
+      const calendarListRes = await calendar.calendarList.list();
+      const calendars = calendarListRes.data.items || [];
+      const colorsRes = await calendar.colors.get();
+      const calendarColors = colorsRes.data.calendar || {};
+      const allEvents = await Promise.all(
+        calendars
+          .filter((cal) => typeof cal.id === 'string')
+          .map(async (cal) => {
+            const res = await calendar.events.list({
+              calendarId: cal.id as string,
+              timeMin,
+              timeMax,
+              singleEvents: true,
+              orderBy: 'startTime',
+              maxResults: 2500,
+            });
+            let _color: { background: string; foreground: string } = {
+              background: '',
+              foreground: '',
+            };
+            if (cal.backgroundColor) {
+              _color.background = cal.backgroundColor;
+              _color.foreground = cal.foregroundColor || '#000000';
+            } else if (
+              cal.colorId &&
+              typeof cal.colorId === 'string' &&
+              calendarColors[cal.colorId]
+            ) {
+              _color = {
+                background: calendarColors[cal.colorId].background as string,
+                foreground: calendarColors[cal.colorId].foreground as string,
+              };
+            }
+            return (res.data.items || []).map((event) => ({
+              ...event,
+              calendarId: cal.id,
+              _color,
+            }));
+          })
+      );
+      // Achata o array de arrays
+      const flatEvents = allEvents.flat();
+      return reply.code(200).send(flatEvents);
     } catch (error) {
       app.log.error(error, 'Error listing Google Calendar events');
       return reply.code(500).send({ message: 'Internal server error' });
@@ -74,7 +113,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       const event = request.body as TCreateGoogleCalendarEvent;
       try {
         const calendar = await getCalendarClient(userId);
@@ -98,7 +137,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const userId = (request.user as { user: { sub: string } }).user.sub;
+      const userId = (request as { user: { sub: string } }).user.sub;
       const { eventId } = request.params as { eventId: string };
       const event = request.body as TUpdateGoogleCalendarEvent;
       try {
@@ -117,7 +156,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
   );
   // DELETE /google/calendar/events/:eventId - Delete event
   app.delete('/events/delete/:eventId', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     const { eventId } = request.params as { eventId: string };
     try {
       const calendar = await getCalendarClient(userId);
@@ -134,7 +173,7 @@ export function googleCalendarRoutes(app: FastifyInstance) {
 
   // GET /google/calendar/calendars - List calendars and their colors
   app.get('/calendars/list', async (request, reply) => {
-    const userId = (request.user as { user: { sub: string } }).user.sub;
+    const userId = (request as { user: { sub: string } }).user.sub;
     try {
       const calendar = await getCalendarClient(userId);
       const calendarListRes = await calendar.calendarList.list();
