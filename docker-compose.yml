@@ -23,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
+      network: host
     container_name: zenithly-api
     restart: unless-stopped
     ports:
@@ -31,7 +32,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - .env.docker
+      - .env
 
   docs:
     build:
