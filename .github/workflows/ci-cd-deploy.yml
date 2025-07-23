@@ -3,9 +3,15 @@ name: CI-CD-Deploy
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - ".github/workflows/**"
   pull_request:
     branches: [master]
   workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
@@ -78,6 +84,7 @@ jobs:
           debug: true
           script: |
             cd ~/zenithly-server
+            git reset --hard origin/master
             git pull origin master
             docker compose pull
             docker compose build
