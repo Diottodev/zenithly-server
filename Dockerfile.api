@@ -1,10 +1,10 @@
 # Dockerfile para API
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --prefer-offline
 FROM node:20-alpine
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production
 COPY . .
-CMD ["yarn", "start"]
+ENV NODE_ENV=production
+EXPOSE 8080
+RUN yarn build
+CMD ["node", "dist/server.js"]
