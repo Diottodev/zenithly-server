@@ -1,13 +1,9 @@
 # Dockerfile para Docs
 FROM node:20-alpine
 WORKDIR /
-
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-
+RUN yarn install --frozen-lockfile --prefer-offline
 COPY docs/ ./docs/
-
 RUN yarn docs:build
-
 EXPOSE 5050
 CMD ["yarn", "docs:start"]
