@@ -1,7 +1,5 @@
 # Zenithly Server
 
-![Zenithly Logo](https://github.com/DiottoDev/zenithly-server/assets/102909024/11222222-3333-4444-5555-666666666666)
-
 O Zenithly Server é o backend robusto e escalável para a aplicação Zenithly, projetado para gerenciar diversas funcionalidades como autenticação de usuários, gerenciamento de notas, senhas, tarefas e integrações com serviços de terceiros como Google Calendar e Outlook. Construído com foco em performance e segurança, este servidor oferece uma API RESTful completa para suportar as operações do frontend.
 
 ## Funcionalidades
