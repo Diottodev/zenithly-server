@@ -84,8 +84,9 @@ jobs:
           debug: true
           script: |
             cd ~/zenithly-server
+            git fetch origin
             git reset --hard origin/master
-            git pull origin master
+            git clean -fd
             docker compose pull
             docker compose build
             docker compose up -d --remove-orphans
